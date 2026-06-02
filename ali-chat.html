@@ -645,18 +645,103 @@ body::before {
 .print-header { display: none; }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 768px) {
+
+/* Tablet (≤ 900px) */
+@media (max-width: 900px) {
   #sidebar { position: fixed; right: 0; top: 0; bottom: 0; z-index: 100; }
   #sidebar.collapsed { transform: translateX(100%); width: 260px; min-width: 260px; }
-  .masthead-title { font-size: 50px; }
-  .masthead-title sup { display: none; }
-  .suggestions { flex-direction: column; align-items: stretch; }
-  .suggestion-card { max-width: 100%; }
   #main::after { display: none; }
-  .messages-inner { padding: 0 16px; }
-  #input-area { padding: 12px 16px 14px; }
-  #header { padding: 10px 16px; }
-  #theme-panel, #export-panel { left: 10px; right: 10px; width: auto; }
+  .messages-inner { max-width: 100%; padding: 0 20px; }
+  .input-wrapper { max-width: 100%; }
+  #theme-panel, #export-panel, #model-panel { left: 12px; right: 12px; width: auto; top: 60px; }
+}
+
+/* Mobile (≤ 600px) */
+@media (max-width: 600px) {
+  /* Header — keep compact */
+  #header { padding: 8px 12px; gap: 8px; }
+  .header-name { font-size: 16px; }
+  .header-sub  { display: none; }
+  .header-stamp { width: 30px; height: 30px; font-size: 10px; }
+  .edition-tag { display: none; }
+  .hdr-btn { height: 30px; padding: 0 8px; font-size: 11px; gap: 4px; }
+
+  /* Sidebar always overlays on mobile */
+  #sidebar { width: 280px; min-width: 280px; }
+  #sidebar.collapsed { transform: translateX(100%); }
+
+  /* Chat area */
+  #chat-area { padding: 20px 0 16px; }
+  .messages-inner { padding: 0 12px; }
+
+  /* Welcome screen */
+  #welcome { min-height: 65vh; padding: 0 16px; }
+  .masthead-top { font-size: 9px; letter-spacing: 2px; }
+  .masthead-title { font-size: 42px; }
+  .masthead-title sup { display: none; }
+  .masthead-sub { font-size: 14px; margin-bottom: 24px; }
+  .suggestions { flex-direction: column; align-items: stretch; gap: 10px; }
+  .suggestion-card { max-width: 100%; min-width: unset; padding: 14px 12px; }
+  .suggestion-icon { font-size: 17px; margin-bottom: 6px; }
+  .suggestion-text { font-size: 13px; }
+
+  /* Messages */
+  .message-row { gap: 8px; margin-bottom: 20px; }
+  .msg-content { max-width: 88%; }
+  .msg-avatar { width: 28px; height: 28px; font-size: 10px; }
+  .msg-bubble { font-size: 14px; padding: 11px 14px; line-height: 1.65; }
+  .msg-bubble h1 { font-size: 18px; }
+  .msg-bubble h2 { font-size: 15px; }
+  .msg-bubble h3 { font-size: 14px; }
+  .msg-bubble code { font-size: 12px; }
+  .msg-bubble pre { padding: 10px 12px; }
+  .msg-sender { font-size: 9px; }
+  .msg-actions { opacity: 1; } /* always visible on touch */
+
+  /* Source chips — wrap tighter */
+  .source-chip { max-width: 180px; font-size: 10px; }
+
+  /* Input area */
+  #input-area { padding: 10px 12px 12px; }
+  .input-toolbar { gap: 6px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .input-toolbar::-webkit-scrollbar { display: none; }
+  .tool-btn { height: 32px; padding: 0 10px; font-size: 11px; flex-shrink: 0; }
+  .web-search-badge { font-size: 10px; padding: 2px 7px; flex-shrink: 0; }
+  .input-box { padding: 10px 10px 10px 12px; }
+  #message-input { font-size: 15px; min-height: 22px; }
+  #send-btn { width: 38px; height: 38px; }
+  .input-hint { display: none; }
+
+  /* Panels — full-width bottom sheets on mobile */
+  #theme-panel, #export-panel, #model-panel {
+    left: 0; right: 0; bottom: 0; top: auto;
+    width: 100%; border-radius: 16px 16px 0 0;
+    border-bottom: none; max-height: 80vh;
+  }
+  .theme-grid { grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px; }
+  .export-list { padding: 10px; }
+  .export-item { padding: 12px; }
+  .model-list { padding: 8px 10px 16px; }
+
+  /* Skills panel */
+  .skills-body { padding: 12px 14px 20px; }
+  .skills-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+  .skill-card { padding: 10px 11px; }
+  .skill-icon { font-size: 16px; margin-bottom: 5px; }
+  .skill-name { font-size: 12px; }
+  .skill-desc { font-size: 10px; }
+
+  /* Toast — higher on mobile to avoid keyboard */
+  #toast { bottom: 100px; font-size: 12px; }
+}
+
+/* Very small phones (≤ 380px) */
+@media (max-width: 380px) {
+  .masthead-title { font-size: 34px; }
+  .hdr-btn { padding: 0 6px; font-size: 10px; }
+  .msg-content { max-width: 93%; }
+  .msg-bubble { font-size: 13px; padding: 10px 12px; }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -1059,8 +1144,8 @@ body::before {
 /* ═══════════════════════════════════════════════════════════
    CONFIG
 ═══════════════════════════════════════════════════════════ */
-const API_URL    = 'http://localhost:8081/v1/chat/completions';
-const SEARCH_URL = 'http://localhost:8081/v1/search';
+const API_URL    = '/v1/chat/completions';
+const SEARCH_URL = '/v1/search';
 const MODELS = [
   { id: 'gemini-3.5-flash',               label: 'Flash 3.5',         badge: 'سريع · الافتراضي' },
   { id: 'gemini-3.5-flash-thinking',      label: 'Flash 3.5 Thinking', badge: 'تفكير عميق' },

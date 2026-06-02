@@ -32,6 +32,9 @@ import os
 import hashlib
 import argparse
 import base64
+import socket
+import threading
+import webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 
@@ -509,6 +512,20 @@ class GeminiHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "*")
         self.end_headers()
 
+    def _serve_chat_ui(self):
+        html_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ali-chat.html')
+        if not os.path.exists(html_path):
+            self.send_json({"status": "ok", "version": __version__, "models": list(MODELS.keys())})
+            return
+        with open(html_path, 'rb') as f:
+            content = f.read()
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(content)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(content)
+
     def do_GET(self):
         try:
             if self.path == "/v1/models":
@@ -519,9 +536,8 @@ class GeminiHandler(BaseHTTPRequestHandler):
                 ]})
             elif self.path.startswith("/v1beta/models"):
                 self._handle_google_models_list()
-            elif self.path == "/":
-                self.send_json({"status": "ok", "version": __version__,
-                                "models": list(MODELS.keys())})
+            elif self.path in ("/", "/chat"):
+                self._serve_chat_ui()
             elif self.path.startswith("/v1/search"):
                 self._handle_search()
             else:
@@ -862,11 +878,23 @@ def load_config(path: str):
         log(f"Config loaded: {path}")
 
 
+def _local_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
+
+
 def main():
     parser = argparse.ArgumentParser(description="Gemini Web to OpenAI API")
     parser.add_argument("--port", type=int, default=None)
     parser.add_argument("--config", type=str, default=None)
     parser.add_argument("--cookie-file", type=str, default=None, help="Path to cookie file")
+    parser.add_argument("--no-browser", action="store_true", help="Do not open browser on startup")
     parser.add_argument("--proxy", type=str, default=None, help="HTTP proxy, e.g. http://127.0.0.1:7890")
     parser.add_argument("--version", action="version", version=f"gemini-web2api {__version__}")
     args = parser.parse_args()
@@ -891,15 +919,23 @@ def main():
         allow_reuse_address = True
 
     port = CONFIG["port"]
-    server = ThreadedServer((CONFIG["host"], port), GeminiHandler)
-    print(f"gemini-web2api v{__version__}")
-    print(f"  Listening: http://0.0.0.0:{port}")
-    print(f"  Base URL:  http://localhost:{port}/v1")
+    local_ip = _local_ip()
+    server = ThreadedServer(("0.0.0.0", port), GeminiHandler)
+    chat_url = f"http://localhost:{port}/"
+    network_url = f"http://{local_ip}:{port}/"
+    print(f"gemini-web2api v{__version__}  —  Ali Chat UI")
+    print(f"  Chat UI:   {chat_url}  (this device)")
+    print(f"  Network:   {network_url}  (phones / tablets on same Wi-Fi)")
+    print(f"  API:       http://localhost:{port}/v1")
     print(f"  Models:    {', '.join(MODELS.keys())}")
     print(f"  Cookie:    {'yes (' + CONFIG['cookie_file'] + ')' if CONFIG.get('cookie_file') else 'none (anonymous)'}")
-    print(f"  Proxy:     {CONFIG.get('proxy') or 'none (uses system env HTTP_PROXY/HTTPS_PROXY)'}")
-    print(f"  Retry:     {CONFIG['retry_attempts']}x / {CONFIG['retry_delay_sec']}s")
+    print(f"  Proxy:     {CONFIG.get('proxy') or 'none'}")
     print()
+    if not args.no_browser:
+        def _open():
+            time.sleep(0.9)
+            webbrowser.open(chat_url)
+        threading.Thread(target=_open, daemon=True).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:
