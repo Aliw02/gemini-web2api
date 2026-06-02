@@ -1,1 +1,2 @@
 httpx>=0.25
+ddgs>=1.0  # optional: enables real DuckDuckGo web search results

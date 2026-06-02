@@ -3,6 +3,8 @@ import json
 import time
 import uuid
 import re
+import urllib.parse
+import urllib.request
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 
@@ -12,6 +14,115 @@ from .gemini import generate, generate_stream, log
 from .tools import messages_to_prompt, parse_tool_calls, google_contents_to_prompt, parse_google_function_calls
 from .multimodal import upload_image, fetch_image_bytes
 from . import __version__
+
+
+def _web_search(query: str) -> list:
+    """Server-side web search: tries duckduckgo-search lib, falls back to DDG API + Wikipedia."""
+    results = []
+
+    # 1. Try ddgs / duckduckgo-search library (pip install ddgs)
+    try:
+        try:
+            from ddgs import DDGS
+        except ImportError:
+            from duckduckgo_search import DDGS
+        with DDGS() as ddgs:
+            for r in ddgs.text(query, max_results=5):
+                results.append({
+                    "title": r.get("title", ""),
+                    "snippet": r.get("body", ""),
+                    "url": r.get("href", ""),
+                    "source": "DuckDuckGo",
+                })
+        if results:
+            return results
+    except Exception:
+        pass
+
+    # 2. Fallback: DDG Instant Answer API
+    try:
+        ddg_url = (
+            "https://api.duckduckgo.com/?q="
+            + urllib.parse.quote(query)
+            + "&format=json&no_html=1&skip_disambig=1"
+        )
+        req = urllib.request.Request(ddg_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            ddg = json.loads(resp.read().decode())
+        if ddg.get("AbstractText"):
+            results.append({
+                "title": ddg.get("Heading", "DuckDuckGo"),
+                "snippet": ddg["AbstractText"],
+                "url": ddg.get("AbstractURL", ""),
+                "source": "DuckDuckGo",
+            })
+        if ddg.get("Answer"):
+            results.append({
+                "title": "Direct Answer",
+                "snippet": ddg["Answer"],
+                "url": "",
+                "source": "DuckDuckGo",
+            })
+        for t in (ddg.get("RelatedTopics") or [])[:4]:
+            if t.get("Text"):
+                results.append({
+                    "title": t.get("Text", "")[:80],
+                    "snippet": t.get("Text", ""),
+                    "url": t.get("FirstURL", ""),
+                    "source": "DuckDuckGo",
+                })
+        for r in (ddg.get("Results") or [])[:3]:
+            if r.get("Text"):
+                results.append({
+                    "title": r.get("Text", "")[:80],
+                    "snippet": r.get("Text", ""),
+                    "url": r.get("FirstURL", ""),
+                    "source": "DuckDuckGo",
+                })
+    except Exception:
+        pass
+
+    # 3. Wikipedia search
+    try:
+        import re as _re
+        is_arabic = bool(_re.search(r'[؀-ۿ]', query))
+        langs = ["ar", "en"] if is_arabic else ["en", "ar"]
+        for lang in langs:
+            search_url = (
+                f"https://{lang}.wikipedia.org/w/api.php?action=opensearch"
+                f"&search={urllib.parse.quote(query)}&limit=3&format=json"
+            )
+            req = urllib.request.Request(search_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                _, titles, descs, urls = json.loads(resp.read().decode())
+            if not titles:
+                continue
+            for i, title in enumerate(titles[:2]):
+                page_url = (
+                    f"https://{lang}.wikipedia.org/w/api.php?action=query"
+                    f"&prop=extracts&exintro=true&explaintext=true"
+                    f"&titles={urllib.parse.quote(title)}&format=json"
+                )
+                try:
+                    req2 = urllib.request.Request(page_url, headers={"User-Agent": "Mozilla/5.0"})
+                    with urllib.request.urlopen(req2, timeout=8) as resp2:
+                        pd = json.loads(resp2.read().decode())
+                    pages = list(pd["query"]["pages"].values())
+                    extract = (pages[0].get("extract") or descs[i] or "")[:1000]
+                except Exception:
+                    extract = descs[i] if i < len(descs) else ""
+                results.append({
+                    "title": title,
+                    "snippet": extract,
+                    "url": urls[i] if i < len(urls) else "",
+                    "source": f"Wikipedia ({lang})",
+                })
+            if results:
+                break
+    except Exception:
+        pass
+
+    return results
 
 
 def _usage(prompt: str, text: str) -> dict:
@@ -100,6 +211,8 @@ class GeminiHandler(BaseHTTPRequestHandler):
                 ]})
             elif self.path == "/":
                 self.send_json({"status": "ok", "version": __version__, "models": list(MODELS.keys())})
+            elif self.path.startswith("/v1/search"):
+                self._handle_search()
             else:
                 self.send_json({"error": "not found"}, 404)
         except (BrokenPipeError, ConnectionResetError):
@@ -130,6 +243,18 @@ class GeminiHandler(BaseHTTPRequestHandler):
                 self.send_json({"error": {"message": str(e)}}, 500)
             except:
                 pass
+
+    # ─── /v1/search ───────────────────────────────────────────────────────────
+
+    def _handle_search(self):
+        parsed = urllib.parse.urlparse(self.path)
+        params = urllib.parse.parse_qs(parsed.query)
+        query = params.get("q", [""])[0].strip()
+        if not query:
+            self.send_json({"error": "missing q parameter"}, 400)
+            return
+        results = _web_search(query)
+        self.send_json({"query": query, "results": results})
 
     # ─── /v1/chat/completions ─────────────────────────────────────────────────
 

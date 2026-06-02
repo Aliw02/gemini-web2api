@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="paper">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ألي AI — ذكاء اصطناعي بلا حدود</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   THEME TOKENS
+═══════════════════════════════════════════════════════════ */
+
+/* PAPER (default) */
+[data-theme="paper"] {
+  --bg:          #F4EFE4;
+  --bg2:         #EDE6D6;
+  --bg3:         #E4DAC6;
+  --bg4:         #D9CEB5;
+  --ink:         #1C1409;
+  --ink60:       rgba(28,20,9,.6);
+  --ink35:       rgba(28,20,9,.35);
+  --ink15:       rgba(28,20,9,.15);
+  --ink08:       rgba(28,20,9,.08);
+  --gold:        #8B6914;
+  --gold2:       #C49A2A;
+  --goldfaint:   rgba(139,105,20,.08);
+  --rust:        #8B2E14;
+  --accent:      #1A3A5C;
+  --line:        rgba(28,20,9,.12);
+  --shadow:      rgba(28,20,9,.18);
+  --ruled-line:  rgba(28,20,9,.06);
+  --margin-line: rgba(139,46,20,.2);
+  --bubble-user-bg: #EEE8D8;
+  --bubble-ai-bg:   #F8F5EE;
+  --sidebar-bg:  #E8E0CE;
+  --header-bg:   #F0EBE0;
+  --input-bg:    #EDE6D6;
+  --noise-op:    0.05;
+  --stamp-bg:    #1C1409;
+  --stamp-fg:    #F4EFE4;
+}
+
+/* NIGHT — Dark editorial journal */
+[data-theme="night"] {
+  --bg:          #141008;
+  --bg2:         #1C160C;
+  --bg3:         #231B10;
+  --bg4:         #2A2014;
+  --ink:         #EDE6D6;
+  --ink60:       rgba(237,230,214,.6);
+  --ink35:       rgba(237,230,214,.35);
+  --ink15:       rgba(237,230,214,.12);
+  --ink08:       rgba(237,230,214,.06);
+  --gold:        #C49A2A;
+  --gold2:       #F5C842;
+  --goldfaint:   rgba(196,154,42,.1);
+  --rust:        #D4614A;
+  --accent:      #6BA8E0;
+  --line:        rgba(237,230,214,.1);
+  --shadow:      rgba(0,0,0,.5);
+  --ruled-line:  rgba(237,230,214,.04);
+  --margin-line: rgba(196,154,42,.18);
+  --bubble-user-bg: #1F180C;
+  --bubble-ai-bg:   #1A1409;
+  --sidebar-bg:  #110E07;
+  --header-bg:   #0E0B05;
+  --input-bg:    #1C160C;
+  --noise-op:    0.04;
+  --stamp-bg:    #C49A2A;
+  --stamp-fg:    #141008;
+}
+
+/* SEPIA — Deep warm amber */
+[data-theme="sepia"] {
+  --bg:          #F0E2C8;
+  --bg2:         #E8D6B8;
+  --bg3:         #DDC9A4;
+  --bg4:         #CEBC90;
+  --ink:         #2D1A06;
+  --ink60:       rgba(45,26,6,.6);
+  --ink35:       rgba(45,26,6,.35);
+  --ink15:       rgba(45,26,6,.15);
+  --ink08:       rgba(45,26,6,.08);
+  --gold:        #7A4F0A;
+  --gold2:       #B07818;
+  --goldfaint:   rgba(122,79,10,.08);
+  --rust:        #7A2008;
+  --accent:      #2C4E7A;
+  --line:        rgba(45,26,6,.14);
+  --shadow:      rgba(45,26,6,.22);
+  --ruled-line:  rgba(45,26,6,.06);
+  --margin-line: rgba(122,32,8,.2);
+  --bubble-user-bg: #E5D3B4;
+  --bubble-ai-bg:   #EEE0C6;
+  --sidebar-bg:  #DFD0B0;
+  --header-bg:   #E8D8BA;
+  --input-bg:    #E4D4B4;
+  --noise-op:    0.06;
+  --stamp-bg:    #2D1A06;
+  --stamp-fg:    #F0E2C8;
+}
+
+/* SLATE — Cool blue-gray editorial */
+[data-theme="slate"] {
+  --bg:          #F0F2F5;
+  --bg2:         #E6E9EE;
+  --bg3:         #D8DCE4;
+  --bg4:         #C8CDD8;
+  --ink:         #12192B;
+  --ink60:       rgba(18,25,43,.6);
+  --ink35:       rgba(18,25,43,.35);
+  --ink15:       rgba(18,25,43,.13);
+  --ink08:       rgba(18,25,43,.07);
+  --gold:        #1A4A8C;
+  --gold2:       #2E6AC8;
+  --goldfaint:   rgba(26,74,140,.08);
+  --rust:        #8B1A2E;
+  --accent:      #1A4A8C;
+  --line:        rgba(18,25,43,.12);
+  --shadow:      rgba(18,25,43,.2);
+  --ruled-line:  rgba(18,25,43,.05);
+  --margin-line: rgba(139,26,46,.18);
+  --bubble-user-bg: #E0E5EE;
+  --bubble-ai-bg:   #EBEEf4;
+  --sidebar-bg:  #E2E6ED;
+  --header-bg:   #E8EBF0;
+  --input-bg:    #E4E8EE;
+  --noise-op:    0.04;
+  --stamp-bg:    #12192B;
+  --stamp-fg:    #F0F2F5;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; transition: background .3s, color .3s; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  mix-blend-mode: multiply;
+  opacity: var(--noise-op, .05);
+}
+
+#app {
+  position: relative; z-index: 1;
+  display: flex; height: 100vh; overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: 260px; min-width: 260px;
+  background: var(--sidebar-bg);
+  border-left: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  transition: transform .35s cubic-bezier(.4,0,.2,1), min-width .35s, width .35s;
+  position: relative; overflow: hidden;
+}
+
+#sidebar::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(transparent, transparent 27px, var(--ruled-line) 27px, var(--ruled-line) 28px);
+  background-position: 0 52px;
+}
+
+#sidebar.collapsed { transform: translateX(100%); min-width: 0; width: 0; overflow: hidden; }
+
+.sidebar-header {
+  padding: 26px 20px 18px;
+  position: relative; z-index: 1;
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand-stamp { display: flex; align-items: center; gap: 11px; }
+
+.stamp-circle {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--stamp-bg); color: var(--stamp-fg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; flex-shrink: 0;
+  box-shadow: 2px 2px 0 var(--gold2);
+  transition: background .3s, color .3s;
+}
+
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 900; color: var(--ink); line-height: 1;
+}
+.brand-tagline { font-size: 10px; color: var(--ink60); font-style: italic; margin-top: 3px; letter-spacing: .3px; }
+
+.new-chat-btn {
+  margin: 14px 14px 6px;
+  padding: 10px 14px;
+  background: var(--stamp-bg); color: var(--stamp-fg);
+  border: none; border-radius: 4px;
+  font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all .2s ease; position: relative; z-index: 1;
+  box-shadow: 2px 2px 0 var(--gold2);
+}
+.new-chat-btn:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--gold2); }
+.new-chat-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--gold2); }
+
+.section-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--ink35); padding: 12px 20px 6px;
+  font-family: 'IM Fell English', serif; position: relative; z-index: 1;
+}
+
+.history-list { flex: 1; overflow-y: auto; padding: 4px 12px; position: relative; z-index: 1; }
+.history-list::-webkit-scrollbar { width: 3px; }
+.history-list::-webkit-scrollbar-thumb { background: var(--ink15); border-radius: 2px; }
+
+.history-item {
+  padding: 8px 10px; border-radius: 4px; cursor: pointer;
+  font-size: 13px; color: var(--ink60); transition: all .15s ease;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 2px;
+  border: 1px solid transparent;
+}
+.history-item:hover { background: var(--bg2); color: var(--ink); }
+.history-item.active { background: var(--bg); color: var(--ink); border-color: var(--line); box-shadow: 1px 1px 0 var(--gold2); }
+
+/* Sidebar footer */
+.sidebar-footer {
+  padding: 14px 20px; border-top: 1px solid var(--line);
+  font-size: 10px; color: var(--ink35); text-align: center;
+  line-height: 1.7; position: relative; z-index: 1;
+}
+.sidebar-footer strong { color: var(--gold2); }
+
+/* ── MAIN ── */
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
+
+#main::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: repeating-linear-gradient(transparent, transparent 31px, var(--ruled-line) 31px, var(--ruled-line) 32px);
+  background-position: 0 82px;
+}
+
+#main::after {
+  content: ''; position: absolute; top: 0; right: 220px; bottom: 0;
+  width: 1px; background: var(--margin-line); pointer-events: none; z-index: 0;
+}
+
+/* ── HEADER ── */
+#header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px;
+  background: var(--header-bg); border-bottom: 2px solid var(--ink);
+  position: relative; z-index: 10; flex-shrink: 0;
+  transition: background .3s;
+}
+#header::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0, var(--ink) 8px, transparent 8px, transparent 12px);
+}
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+.header-left  { display: flex; align-items: center; gap: 8px; }
+
+.hdr-btn {
+  height: 32px; padding: 0 12px; border-radius: 4px;
+  background: none; border: 1px solid var(--ink15);
+  color: var(--ink60); font-family: 'Cairo', sans-serif;
+  font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+  transition: all .2s ease; white-space: nowrap;
+}
+.hdr-btn:hover { background: var(--bg2); color: var(--ink); border-color: var(--ink35); }
+.hdr-btn.active { background: var(--stamp-bg); color: var(--stamp-fg); border-color: var(--stamp-bg); }
+
+.toggle-btn {
+  width: 32px; height: 32px; background: none;
+  border: 1px solid var(--ink15); border-radius: 4px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: var(--ink60); transition: all .2s ease;
+}
+.toggle-btn:hover { background: var(--bg2); color: var(--ink); }
+
+.header-brand { display: flex; align-items: center; gap: 10px; }
+
+.header-stamp {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--stamp-bg); color: var(--stamp-fg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; box-shadow: 1px 1px 0 var(--gold2);
+  transition: background .3s, color .3s;
+}
+
+.header-name { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 900; color: var(--ink); line-height: 1; }
+.header-sub { font-size: 10px; color: var(--ink35); font-style: italic; margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+
+.status-dot { width: 5px; height: 5px; border-radius: 50%; background: #2A7A4A; box-shadow: 0 0 5px rgba(42,122,74,.6); animation: blink 2.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.4} }
+
+.edition-tag { padding: 5px 10px; background: var(--stamp-bg); color: var(--stamp-fg); font-size: 11px; font-weight: 600; font-family: 'Playfair Display', serif; border-radius: 3px; box-shadow: 1px 1px 0 var(--gold2); transition: background .3s, color .3s; }
+
+/* ── CHAT AREA ── */
+#chat-area { flex: 1; overflow-y: auto; padding: 40px 0 24px; position: relative; z-index: 1; scroll-behavior: smooth; }
+#chat-area::-webkit-scrollbar { width: 5px; }
+#chat-area::-webkit-scrollbar-thumb { background: var(--ink15); border-radius: 3px; }
+
+.messages-inner { max-width: 760px; margin: 0 auto; padding: 0 28px; }
+
+/* ── WELCOME ── */
+#welcome {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 72vh; text-align: center;
+  animation: appear .5s ease both;
+}
+@keyframes appear { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+.masthead-top { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--ink35); font-family: 'IM Fell English', serif; margin-bottom: 8px; }
+.masthead-title { font-family: 'Playfair Display', serif; font-size: 70px; font-weight: 900; color: var(--ink); line-height: 1; margin-bottom: 4px; position: relative; }
+.masthead-title sup { font-size: 18px; font-weight: 700; font-family: 'IM Fell English', serif; color: var(--gold2); position: absolute; top: 8px; left: -30px; }
+.masthead-rule { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+.masthead-rule::before,.masthead-rule::after { content: ''; flex: 1; height: 1px; background: var(--ink); }
+.masthead-sub { font-family: 'IM Fell English', serif; font-size: 16px; font-style: italic; color: var(--ink60); margin-bottom: 36px; }
+
+.suggestions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; max-width: 700px; }
+
+.suggestion-card {
+  flex: 1; min-width: 165px; max-width: 210px;
+  padding: 18px 16px; background: var(--bubble-ai-bg);
+  border: 1px solid var(--ink15); border-radius: 4px;
+  cursor: pointer; text-align: right; transition: all .2s ease;
+  box-shadow: 2px 2px 0 var(--bg4); position: relative; overflow: hidden;
+}
+.suggestion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gold2); transform: scaleX(0); transition: transform .2s ease; }
+.suggestion-card:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--bg4); border-color: var(--ink35); }
+.suggestion-card:hover::before { transform: scaleX(1); }
+.suggestion-icon { font-size: 20px; margin-bottom: 10px; display: block; }
+.suggestion-text { font-size: 13px; color: var(--ink60); line-height: 1.55; }
+.suggestion-card:hover .suggestion-text { color: var(--ink); }
+
+/* ── MESSAGES ── */
+.message-row { display: flex; margin-bottom: 28px; gap: 14px; animation: appear .35s ease both; }
+.message-row.user { flex-direction: row-reverse; }
+
+.msg-avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 2px; }
+.msg-avatar.ali { background: var(--stamp-bg); color: var(--stamp-fg); box-shadow: 1px 1px 0 var(--gold2); }
+.msg-avatar.user-av { background: var(--bg3); color: var(--ink); border: 1px solid var(--line); }
+
+.msg-content { max-width: 70%; display: flex; flex-direction: column; gap: 5px; }
+.message-row.user .msg-content { align-items: flex-end; }
+
+.msg-sender { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink35); padding: 0 2px; font-family: 'IM Fell English', serif; font-style: italic; }
+
+.msg-bubble { padding: 14px 18px; border-radius: 4px; font-size: 15px; line-height: 1.75; word-break: break-word; position: relative; }
+
+.message-row.user .msg-bubble { background: var(--bubble-user-bg); border: 1px solid var(--ink15); box-shadow: 2px 2px 0 var(--bg4); }
+
+.message-row.ai .msg-bubble { background: var(--bubble-ai-bg); border: 1px solid var(--ink); box-shadow: 3px 3px 0 var(--ink15); }
+.message-row.ai .msg-bubble::before { content: ''; position: absolute; top: -1px; right: 20px; width: 40px; height: 2px; background: var(--gold2); }
+
+/* Markdown */
+.msg-bubble h1,.msg-bubble h2,.msg-bubble h3 { font-family: 'Playfair Display', serif; color: var(--ink); margin: 12px 0 6px; }
+.msg-bubble h1 { font-size: 21px; border-bottom: 1px solid var(--line); padding-bottom: 5px; }
+.msg-bubble h2 { font-size: 17px; }
+.msg-bubble h3 { font-size: 15px; }
+.msg-bubble p { margin-bottom: 9px; }
+.msg-bubble p:last-child { margin-bottom: 0; }
+.msg-bubble strong { font-weight: 700; color: var(--rust); }
+.msg-bubble em { font-style: italic; color: var(--ink60); }
+.msg-bubble code { background: var(--bg3); border: 1px solid var(--line); padding: 1px 5px; border-radius: 3px; font-size: 13px; font-family: 'Courier New', monospace; color: var(--rust); }
+.msg-bubble pre { background: var(--bg2); border: 1px solid var(--ink15); border-right: 3px solid var(--ink); border-radius: 4px; padding: 14px 16px; overflow-x: auto; margin: 10px 0; }
+.msg-bubble pre code { background: none; border: none; padding: 0; color: var(--ink); font-size: 13px; }
+.msg-bubble ul,.msg-bubble ol { padding-right: 22px; margin-bottom: 9px; }
+.msg-bubble li { margin-bottom: 4px; }
+.msg-bubble blockquote { border-right: 3px solid var(--gold2); padding-right: 14px; color: var(--ink60); margin: 10px 0; font-style: italic; font-family: 'IM Fell English', serif; font-size: 16px; }
+.msg-bubble a { color: var(--accent); text-decoration: underline; }
+.msg-bubble table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+.msg-bubble th { background: var(--bg3); border: 1px solid var(--line); padding: 7px 10px; font-weight: 700; }
+.msg-bubble td { border: 1px solid var(--line); padding: 6px 10px; }
+.msg-bubble tr:nth-child(even) td { background: var(--bg2); }
+
+.msg-actions { display: flex; gap: 6px; opacity: 0; transition: opacity .2s; }
+.message-row:hover .msg-actions { opacity: 1; }
+
+.msg-action-btn { padding: 3px 10px; background: var(--bg2); border: 1px solid var(--ink15); border-radius: 3px; color: var(--ink60); font-size: 11px; cursor: pointer; font-family: 'Cairo', sans-serif; transition: all .15s ease; }
+.msg-action-btn:hover { background: var(--bg); color: var(--ink); border-color: var(--ink35); }
+
+/* Search / URL tags on messages */
+.msg-web-tag { display: inline-flex; align-items: center; gap: 4px; background: var(--goldfaint); border: 1px solid rgba(139,105,20,.2); border-radius: 3px; padding: 2px 8px; font-size: 10px; color: var(--gold2); margin-bottom: 8px; font-family: 'IM Fell English', serif; font-style: italic; }
+.msg-url-tag { display: inline-flex; align-items: center; gap: 4px; background: rgba(26,58,92,.07); border: 1px solid rgba(26,58,92,.2); border-radius: 3px; padding: 2px 8px; font-size: 10px; color: var(--accent); margin-bottom: 8px; font-family: 'IM Fell English', serif; font-style: italic; margin-right: 6px; }
+
+/* Search source chips */
+.search-sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ink15); }
+.search-sources-label { width: 100%; font-size: 10px; color: var(--ink35); font-family: 'Cairo', sans-serif; margin-bottom: 2px; }
+.source-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: var(--bg2); border: 1px solid var(--ink15); border-radius: 20px; font-size: 11px; color: var(--ink60); text-decoration: none; font-family: 'Cairo', sans-serif; transition: all .15s ease; max-width: 240px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.source-chip:hover { background: var(--goldfaint); border-color: var(--gold2); color: var(--gold2); }
+
+/* Code block enhancements */
+.code-block-wrap { position: relative; margin: 10px 0; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+.code-header { display: flex; align-items: center; justify-content: space-between; padding: 5px 12px; background: var(--bg3); border-bottom: 1px solid var(--line); }
+.code-lang { font-size: 10px; color: var(--ink35); font-family: monospace; text-transform: uppercase; letter-spacing: 1px; }
+.code-copy-btn { padding: 2px 9px; background: var(--bg2); border: 1px solid var(--ink15); border-radius: 3px; color: var(--ink60); font-size: 10px; cursor: pointer; font-family: 'Cairo', sans-serif; transition: all .15s ease; }
+.code-copy-btn:hover { background: var(--goldfaint); color: var(--gold2); border-color: var(--gold2); }
+.code-block-wrap pre { margin: 0 !important; border-radius: 0 !important; border: none !important; background: var(--bg2) !important; }
+.code-block-wrap pre code { background: transparent !important; border: none !important; }
+
+/* ── TYPING ── */
+#typing-indicator { display: none; margin-bottom: 28px; animation: appear .3s ease both; }
+#typing-indicator.visible { display: flex; gap: 14px; }
+
+.typing-bubble { background: var(--bubble-ai-bg); border: 1px solid var(--ink); border-radius: 4px; padding: 16px 20px; display: flex; align-items: center; gap: 7px; box-shadow: 3px 3px 0 var(--ink15); }
+.typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink35); animation: tdot 1.4s infinite ease-in-out; }
+.typing-dot:nth-child(1){animation-delay:0s} .typing-dot:nth-child(2){animation-delay:.2s} .typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
+
+/* ── INPUT AREA ── */
+#input-area {
+  padding: 16px 24px 18px; background: var(--header-bg);
+  border-top: 2px solid var(--ink); flex-shrink: 0;
+  position: relative; z-index: 10; transition: background .3s;
+}
+#input-area::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: repeating-linear-gradient(90deg, var(--gold2) 0, var(--gold2) 8px, transparent 8px, transparent 12px); }
+
+.input-wrapper { max-width: 760px; margin: 0 auto; }
+
+/* Toolbar row */
+.input-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+
+.tool-btn {
+  height: 30px; padding: 0 12px; border-radius: 4px;
+  background: var(--bg2); border: 1px solid var(--ink15);
+  color: var(--ink60); font-family: 'Cairo', sans-serif;
+  font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+  transition: all .2s ease; white-space: nowrap;
+}
+.tool-btn:hover { border-color: var(--ink35); color: var(--ink); }
+.tool-btn.on { background: var(--stamp-bg); color: var(--stamp-fg); border-color: var(--stamp-bg); box-shadow: 1px 1px 0 var(--gold2); }
+
+.toolbar-spacer { flex: 1; }
+
+.web-search-badge {
+  display: none; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--gold2); font-style: italic;
+  font-family: 'IM Fell English', serif; padding: 3px 10px;
+  background: var(--goldfaint); border: 1px solid rgba(139,105,20,.2); border-radius: 3px;
+}
+.web-search-badge.visible { display: flex; }
+
+/* Input box */
+.input-box {
+  display: flex; align-items: flex-end; gap: 10px;
+  background: var(--input-bg); border: 1px solid var(--ink35);
+  border-radius: 4px; padding: 12px 12px 12px 14px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.input-box:focus-within { border-color: var(--ink); box-shadow: 3px 3px 0 var(--gold2); }
+
+#message-input { flex: 1; background: none; border: none; outline: none; color: var(--ink); font-family: 'Cairo', sans-serif; font-size: 15px; resize: none; min-height: 24px; max-height: 160px; line-height: 1.6; direction: auto; overflow-y: auto; }
+#message-input::placeholder { color: var(--ink35); font-style: italic; }
+#message-input::-webkit-scrollbar { width: 3px; }
+#message-input::-webkit-scrollbar-thumb { background: var(--ink15); }
+
+#send-btn { width: 40px; height: 40px; border-radius: 4px; background: var(--stamp-bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .2s ease; box-shadow: 2px 2px 0 var(--gold2); }
+#send-btn:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--gold2); }
+#send-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--gold2); }
+#send-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+#send-btn svg { color: var(--stamp-fg); stroke: var(--stamp-fg); }
+
+.input-hint { text-align: center; font-size: 10px; color: var(--ink35); margin-top: 9px; font-style: italic; font-family: 'IM Fell English', serif; }
+
+/* Error */
+.error-bubble { background: rgba(139,46,20,.07); border: 1px solid rgba(139,46,20,.3); border-right: 3px solid var(--rust); border-radius: 4px; padding: 12px 16px; font-size: 14px; color: var(--rust); margin: 8px 0; font-style: italic; }
+
+/* ═══════════════════════════════════════════════════════════
+   PANELS (theme, export, skills)
+═══════════════════════════════════════════════════════════ */
+
+/* Overlay */
+.panel-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.35);
+  z-index: 200; opacity: 0; pointer-events: none;
+  transition: opacity .25s ease; backdrop-filter: blur(2px);
+}
+.panel-overlay.open { opacity: 1; pointer-events: all; }
+
+/* Generic panel */
+.panel {
+  position: fixed; z-index: 201;
+  background: var(--bg); border: 1px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink15);
+  border-radius: 4px; padding: 0;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  max-height: 90vh; overflow-y: auto;
+}
+.panel::-webkit-scrollbar{width:4px} .panel::-webkit-scrollbar-thumb{background:var(--ink15)}
+
+.panel-header { padding: 18px 20px 14px; border-bottom: 2px solid var(--ink); display: flex; align-items: center; justify-content: space-between; }
+.panel-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; color: var(--ink); }
+.panel-close { width: 28px; height: 28px; background: none; border: 1px solid var(--ink15); border-radius: 3px; cursor: pointer; color: var(--ink60); font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.panel-close:hover { background: var(--bg2); color: var(--ink); }
+
+/* ── THEME PANEL ── */
+#theme-panel { top: 70px; left: 24px; width: 320px; }
+
+/* ── MODEL PANEL ── */
+#model-panel { top: 70px; left: 24px; width: 310px; }
+.model-list { padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.model-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 13px; background: var(--bg2);
+  border: 1px solid var(--ink15); border-radius: 4px;
+  cursor: pointer; transition: all .2s ease; position: relative;
+}
+.model-item:hover { background: var(--bg3); border-color: var(--ink35); transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--bg4); }
+.model-item.active { border-color: var(--ink); box-shadow: 2px 2px 0 var(--gold2); background: var(--bg); }
+.model-item-main { flex: 1; }
+.model-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.model-id { font-size: 10px; color: var(--ink35); margin-top: 2px; font-family: 'Courier New', monospace; }
+.model-badge { font-size: 10px; color: var(--gold2); background: var(--goldfaint); border: 1px solid rgba(139,105,20,.2); border-radius: 3px; padding: 2px 7px; white-space: nowrap; font-family: 'IM Fell English', serif; font-style: italic; }
+.model-check { font-size: 14px; color: var(--gold2); opacity: 0; transition: opacity .2s; }
+.model-item.active .model-check { opacity: 1; }
+
+.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 18px; }
+
+.theme-swatch {
+  border: 2px solid transparent; border-radius: 6px; overflow: hidden;
+  cursor: pointer; transition: all .2s ease; position: relative;
+}
+.theme-swatch:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink15); }
+.theme-swatch.active { border-color: var(--ink); box-shadow: 2px 2px 0 var(--gold2); }
+
+.swatch-preview {
+  height: 60px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px 10px;
+  position: relative; overflow: hidden;
+}
+
+.swatch-lines { position: absolute; inset: 0; background-image: repeating-linear-gradient(transparent, transparent 9px, currentColor 9px, currentColor 10px); opacity: .07; }
+
+.swatch-stamp { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900; margin-bottom: 6px; }
+
+.swatch-name { font-size: 11px; font-weight: 600; line-height: 1; }
+.swatch-sub { font-size: 9px; opacity: .6; margin-top: 2px; }
+.swatch-check { position: absolute; top: 8px; left: 8px; font-size: 14px; opacity: 0; transition: opacity .2s; }
+.theme-swatch.active .swatch-check { opacity: 1; }
+
+/* Swatch color variants */
+.swatch-paper { background: #F4EFE4; color: #1C1409; }
+.swatch-night  { background: #141008; color: #EDE6D6; }
+.swatch-sepia  { background: #F0E2C8; color: #2D1A06; }
+.swatch-slate  { background: #F0F2F5; color: #12192B; }
+
+/* ── EXPORT PANEL ── */
+#export-panel { top: 70px; left: 24px; width: 280px; }
+
+.export-list { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+
+.export-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px; background: var(--bg2);
+  border: 1px solid var(--ink15); border-radius: 4px;
+  cursor: pointer; transition: all .2s ease;
+}
+.export-item:hover { background: var(--bg3); border-color: var(--ink35); transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--bg4); }
+
+.export-icon { font-size: 20px; flex-shrink: 0; }
+.export-label { font-size: 14px; font-weight: 600; color: var(--ink); }
+.export-desc { font-size: 11px; color: var(--ink60); margin-top: 2px; font-style: italic; }
+
+/* ── SKILLS PANEL ── */
+#skills-panel {
+  bottom: 0; right: 0; left: 0;
+  border-radius: 12px 12px 0 0; border-bottom: none;
+  transform: translateY(100%); max-height: 70vh;
+  top: auto;
+}
+#skills-panel.open { transform: translateY(0); }
+
+.skills-handle { width: 40px; height: 4px; background: var(--ink15); border-radius: 2px; margin: 12px auto 0; cursor: pointer; }
+
+.skills-body { padding: 18px 20px 24px; }
+
+.skills-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--ink35); font-family: 'IM Fell English', serif; margin-bottom: 10px; }
+
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 9px; margin-bottom: 20px; }
+
+.skill-card {
+  padding: 13px 14px; background: var(--bg2);
+  border: 1px solid var(--ink15); border-radius: 4px;
+  cursor: pointer; transition: all .2s ease; text-align: right;
+  position: relative; overflow: hidden;
+}
+.skill-card::before { content: ''; position: absolute; top: 0; right: 0; left: 0; height: 2px; background: var(--gold2); transform: scaleX(0); transition: transform .2s; transform-origin: right; }
+.skill-card:hover { background: var(--bg3); border-color: var(--ink35); transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--bg4); }
+.skill-card:hover::before { transform: scaleX(1); }
+
+.skill-icon { font-size: 18px; margin-bottom: 7px; display: block; }
+.skill-name { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+.skill-desc { font-size: 11px; color: var(--ink60); margin-top: 4px; line-height: 1.4; }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 90px; left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--ink); color: var(--bg); padding: 8px 20px;
+  border-radius: 3px; font-size: 12px; opacity: 0; pointer-events: none;
+  transition: all .25s ease; z-index: 999;
+  box-shadow: 2px 2px 0 var(--gold2); font-family: 'IM Fell English', serif;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── PRINT STYLES ── */
+@media print {
+  #sidebar, #header, #input-area, .msg-actions, #typing-indicator,
+  .panel, .panel-overlay, #toast { display: none !important; }
+
+  body { background: white !important; color: black !important; }
+  #app { display: block; height: auto; }
+  #main { display: block; }
+  #chat-area { overflow: visible; height: auto; padding: 20px; }
+  #main::before, #main::after { display: none; }
+  .messages-inner { max-width: 100%; padding: 0; }
+
+  .print-header { display: block !important; text-align: center; margin-bottom: 30px; padding-bottom: 16px; border-bottom: 2px solid black; }
+  .print-header h1 { font-family: 'Playfair Display', serif; font-size: 28px; }
+  .print-header p { font-size: 12px; color: #666; margin-top: 4px; }
+
+  .message-row { break-inside: avoid; margin-bottom: 20px; }
+  .msg-avatar { display: none; }
+  .msg-bubble { border: 1px solid #ccc !important; box-shadow: none !important; }
+  .msg-bubble::before { display: none !important; }
+  .msg-sender { color: #666 !important; }
+}
+
+.print-header { display: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  #sidebar { position: fixed; right: 0; top: 0; bottom: 0; z-index: 100; }
+  #sidebar.collapsed { transform: translateX(100%); width: 260px; min-width: 260px; }
+  .masthead-title { font-size: 50px; }
+  .masthead-title sup { display: none; }
+  .suggestions { flex-direction: column; align-items: stretch; }
+  .suggestion-card { max-width: 100%; }
+  #main::after { display: none; }
+  .messages-inner { padding: 0 16px; }
+  #input-area { padding: 12px 16px 14px; }
+  #header { padding: 10px 16px; }
+  #theme-panel, #export-panel { left: 10px; right: 10px; width: auto; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-stamp">
+        <div class="stamp-circle">ألي</div>
+        <div>
+          <div class="brand-name">ألي AI</div>
+          <div class="brand-tagline">ذكاء اصطناعي بلا حدود</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="new-chat-btn" onclick="newChat()">＋ محادثة جديدة</button>
+
+    <div class="section-label">السجل</div>
+    <div class="history-list" id="history-list"></div>
+
+    <div class="sidebar-footer">
+      <span id="sidebar-model">مدعوم بـ Flash 2.5 · مجاناً بالكامل</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+
+    <!-- HEADER -->
+    <header id="header">
+      <div class="header-right">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        <div class="header-brand">
+          <div class="header-stamp">ألي</div>
+          <div>
+            <div class="header-name">ألي AI</div>
+            <div class="header-sub"><div class="status-dot"></div>متصل — جاهز</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-left">
+        <button class="hdr-btn" onclick="openPanel('theme-panel')">🎨 السمة</button>
+        <button class="hdr-btn" onclick="openPanel('export-panel')">📤 تصدير</button>
+        <button class="hdr-btn" onclick="openPanel('model-panel')">🤖 النموذج</button>
+        <div class="edition-tag" id="edition-tag">ألي Flash 2.5</div>
+      </div>
+    </header>
+
+    <!-- CHAT -->
+    <div id="chat-area">
+      <div class="messages-inner">
+        <div class="print-header">
+          <h1>ألي AI</h1>
+          <p id="print-date"></p>
+        </div>
+
+        <div id="welcome">
+          <div class="welcome-masthead">
+            <div class="masthead-top">The Ali Intelligence — Est. 2026</div>
+            <div class="masthead-title">ألي<sup>AI</sup></div>
+            <div class="masthead-rule">
+              <span style="font-family:'IM Fell English',serif;font-size:14px;color:var(--ink35);font-style:italic">ذكاء اصطناعي بلا حدود</span>
+            </div>
+            <div class="masthead-sub">"اسأل أي شيء — أجيبك بعلم وأسلوب"</div>
+          </div>
+          <div class="suggestions">
+            <div class="suggestion-card" onclick="sendSuggestion('اشرح لي كيف يعمل الذكاء الاصطناعي بأسلوب بسيط')">
+              <span class="suggestion-icon">🧠</span>
+              <div class="suggestion-text">اشرح الذكاء الاصطناعي ببساطة</div>
+            </div>
+            <div class="suggestion-card" onclick="sendSuggestion('ساعدني في كتابة رسالة تسويقية احترافية')">
+              <span class="suggestion-icon">✒️</span>
+              <div class="suggestion-text">رسالة تسويقية احترافية</div>
+            </div>
+            <div class="suggestion-card" onclick="sendSuggestion('ما هي أفضل ممارسات البرمجة في Python؟')">
+              <span class="suggestion-icon">📜</span>
+              <div class="suggestion-text">أفضل ممارسات Python</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="messages-container"></div>
+
+        <div id="typing-indicator">
+          <div class="msg-avatar ali">ألي</div>
+          <div class="typing-bubble">
+            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INPUT -->
+    <div id="input-area">
+      <div class="input-wrapper">
+        <!-- Toolbar -->
+        <div class="input-toolbar">
+          <button class="tool-btn" id="web-btn" onclick="toggleWebSearch()" title="تفعيل البحث في الإنترنت">🌐 بحث ويب</button>
+          <button class="tool-btn" onclick="openPanel('skills-panel')">✦ مهارات</button>
+          <div class="toolbar-spacer"></div>
+          <div class="web-search-badge" id="web-badge">🌐 وضع البحث مفعّل</div>
+        </div>
+
+        <!-- Input box -->
+        <div class="input-box">
+          <button id="send-btn" onclick="sendMessage()" title="إرسال">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+          <textarea id="message-input" placeholder="اكتب سؤالك هنا…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        </div>
+        <div class="input-hint">Enter للإرسال · Shift+Enter لسطر جديد</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── OVERLAY ── -->
+<div class="panel-overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- ── THEME PANEL ── -->
+<div class="panel" id="theme-panel" style="display:none">
+  <div class="panel-header">
+    <div class="panel-title">اختر السمة</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="theme-grid">
+    <div class="theme-swatch swatch-paper active" onclick="setTheme('paper')" data-theme="paper">
+      <div class="swatch-preview" style="background:#F4EFE4;color:#1C1409">
+        <div class="swatch-lines"></div>
+        <div class="swatch-stamp" style="background:#1C1409;color:#F4EFE4">ألي</div>
+        <div class="swatch-name">ورقي</div>
+        <div class="swatch-sub">Paper — الكلاسيكي</div>
+      </div>
+      <div class="swatch-check">✦</div>
+    </div>
+
+    <div class="theme-swatch swatch-night" onclick="setTheme('night')" data-theme="night">
+      <div class="swatch-preview" style="background:#141008;color:#EDE6D6">
+        <div class="swatch-lines"></div>
+        <div class="swatch-stamp" style="background:#C49A2A;color:#141008">ألي</div>
+        <div class="swatch-name">ليلي</div>
+        <div class="swatch-sub">Night — الداكن</div>
+      </div>
+      <div class="swatch-check" style="color:#C49A2A">✦</div>
+    </div>
+
+    <div class="theme-swatch swatch-sepia" onclick="setTheme('sepia')" data-theme="sepia">
+      <div class="swatch-preview" style="background:#F0E2C8;color:#2D1A06">
+        <div class="swatch-lines"></div>
+        <div class="swatch-stamp" style="background:#2D1A06;color:#F0E2C8">ألي</div>
+        <div class="swatch-name">سيبيا</div>
+        <div class="swatch-sub">Sepia — الدافئ</div>
+      </div>
+      <div class="swatch-check">✦</div>
+    </div>
+
+    <div class="theme-swatch swatch-slate" onclick="setTheme('slate')" data-theme="slate">
+      <div class="swatch-preview" style="background:#F0F2F5;color:#12192B">
+        <div class="swatch-lines"></div>
+        <div class="swatch-stamp" style="background:#12192B;color:#F0F2F5">ألي</div>
+        <div class="swatch-name">أردوازي</div>
+        <div class="swatch-sub">Slate — الرسمي</div>
+      </div>
+      <div class="swatch-check">✦</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXPORT PANEL ── -->
+<div class="panel" id="export-panel" style="display:none">
+  <div class="panel-header">
+    <div class="panel-title">تصدير المحادثة</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="export-list">
+    <div class="export-item" onclick="exportPDF()">
+      <div class="export-icon">🖨️</div>
+      <div>
+        <div class="export-label">تصدير PDF</div>
+        <div class="export-desc">طباعة أو حفظ كملف PDF بتنسيق جميل</div>
+      </div>
+    </div>
+    <div class="export-item" onclick="exportTXT()">
+      <div class="export-icon">📄</div>
+      <div>
+        <div class="export-label">تصدير TXT</div>
+        <div class="export-desc">حفظ النص الخام كملف نصي</div>
+      </div>
+    </div>
+    <div class="export-item" onclick="exportMarkdown()">
+      <div class="export-icon">📝</div>
+      <div>
+        <div class="export-label">تصدير Markdown</div>
+        <div class="export-desc">حفظ المحادثة بصيغة Markdown</div>
+      </div>
+    </div>
+    <div class="export-item" onclick="copyAll()">
+      <div class="export-icon">📋</div>
+      <div>
+        <div class="export-label">نسخ الكل</div>
+        <div class="export-desc">نسخ جميع الرسائل إلى الحافظة</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODEL PANEL ── -->
+<div class="panel" id="model-panel" style="display:none">
+  <div class="panel-header">
+    <div class="panel-title">اختر النموذج</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="model-list" id="model-list"></div>
+</div>
+
+<!-- ── SKILLS PANEL ── -->
+<div class="panel" id="skills-panel" style="display:none">
+  <div class="skills-handle" onclick="closeAllPanels()"></div>
+  <div class="skills-body">
+
+    <div class="skills-section-title">✍️ الكتابة والمحتوى</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('أعد صياغة النص التالي بأسلوب أكثر احترافية:\n\n')">
+        <span class="skill-icon">✍️</span>
+        <div class="skill-name">إعادة صياغة</div>
+        <div class="skill-desc">تحسين الأسلوب</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي مقالاً عن: ')">
+        <span class="skill-icon">📰</span>
+        <div class="skill-name">كتابة مقال</div>
+        <div class="skill-desc">مقالة كاملة ومنظمة</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('لخّص النص التالي في نقاط مختصرة:\n\n')">
+        <span class="skill-icon">📋</span>
+        <div class="skill-name">تلخيص</div>
+        <div class="skill-desc">تلخيص أي نص</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي بريداً إلكترونياً احترافياً بخصوص: ')">
+        <span class="skill-icon">📧</span>
+        <div class="skill-name">بريد إلكتروني</div>
+        <div class="skill-desc">رسالة رسمية</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">🌐 الترجمة</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('ترجم النص التالي إلى الإنجليزية:\n\n')">
+        <span class="skill-icon">🇸🇦→🇬🇧</span>
+        <div class="skill-name">عربي → إنجليزي</div>
+        <div class="skill-desc">ترجمة دقيقة</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('Translate the following to Arabic:\n\n')">
+        <span class="skill-icon">🇬🇧→🇸🇦</span>
+        <div class="skill-name">English → عربي</div>
+        <div class="skill-desc">دقة عالية</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">💻 البرمجة</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('اشرح الكود التالي بالتفصيل:\n\n```\n')">
+        <span class="skill-icon">🔍</span>
+        <div class="skill-name">شرح كود</div>
+        <div class="skill-desc">فهم الأسطر</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('راجع الكود التالي وابحث عن الأخطاء والتحسينات:\n\n```\n')">
+        <span class="skill-icon">🐛</span>
+        <div class="skill-name">مراجعة كود</div>
+        <div class="skill-desc">كشف الأخطاء</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('الكود التالي لا يعمل، ابحث عن السبب وأصلحه:\n\n```\n')">
+        <span class="skill-icon">🔧</span>
+        <div class="skill-name">إصلاح كود</div>
+        <div class="skill-desc">debug وإصلاح</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('حسّن الكود التالي من حيث الأداء وجودة الكتابة:\n\n```\n')">
+        <span class="skill-icon">⚡</span>
+        <div class="skill-name">تحسين الأداء</div>
+        <div class="skill-desc">refactor وتحسين</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي كوداً بلغة Python يقوم بـ: ')">
+        <span class="skill-icon">🐍</span>
+        <div class="skill-name">Python</div>
+        <div class="skill-desc">توليد كود</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي كوداً بلغة JavaScript يقوم بـ: ')">
+        <span class="skill-icon">🟨</span>
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-desc">توليد كود</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي SQL query لـ: ')">
+        <span class="skill-icon">🗃️</span>
+        <div class="skill-name">SQL</div>
+        <div class="skill-desc">استعلامات قاعدة البيانات</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي regex pattern يطابق: ')">
+        <span class="skill-icon">🔤</span>
+        <div class="skill-name">Regex</div>
+        <div class="skill-desc">تعبيرات نمطية</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">📊 التحليل والبحث</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('حلّل الأفكار التالية وأعطني رأيك المفصّل:\n\n')">
+        <span class="skill-icon">📊</span>
+        <div class="skill-name">تحليل</div>
+        <div class="skill-desc">تقييم متعمق</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('قارن بين ')">
+        <span class="skill-icon">⚖️</span>
+        <div class="skill-name">مقارنة</div>
+        <div class="skill-desc">مقارنة الخيارات</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('ما هي إيجابيات وسلبيات: ')">
+        <span class="skill-icon">🔄</span>
+        <div class="skill-name">إيجابيات وسلبيات</div>
+        <div class="skill-desc">تقييم الخيارات</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اقترح لي خطوات عملية لـ: ')">
+        <span class="skill-icon">🗺️</span>
+        <div class="skill-name">خطة عمل</div>
+        <div class="skill-desc">خطوات قابلة للتنفيذ</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اعطني 10 أفكار إبداعية عن: ')">
+        <span class="skill-icon">💡</span>
+        <div class="skill-name">عصف ذهني</div>
+        <div class="skill-desc">توليد أفكار</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اشرح لي هذا الموضوع بأسلوب بسيط جداً كأنني عمري 10 سنوات: ')">
+        <span class="skill-icon">👶</span>
+        <div class="skill-name">اشرح ببساطة</div>
+        <div class="skill-desc">شرح مبسط جداً</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">📱 التسويق والتواصل</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('اكتب لي منشور X/Twitter جذاب ومختصر عن: ')">
+        <span class="skill-icon">𝕏</span>
+        <div class="skill-name">منشور X</div>
+        <div class="skill-desc">تغريدة احترافية</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي منشور LinkedIn احترافي عن: ')">
+        <span class="skill-icon">💼</span>
+        <div class="skill-name">LinkedIn</div>
+        <div class="skill-desc">منشور مهني</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اكتب لي إعلاناً تسويقياً مقنعاً عن: ')">
+        <span class="skill-icon">📣</span>
+        <div class="skill-name">إعلان</div>
+        <div class="skill-desc">نص تسويقي</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('حسّن هذا الـ prompt ليكون أكثر دقة ووضوحاً:\n\n')">
+        <span class="skill-icon">🎯</span>
+        <div class="skill-name">تحسين Prompt</div>
+        <div class="skill-desc">صياغة أفضل</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">🌐 أدوات البحث والروابط</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkillAndSearch('ابحث عن: ')">
+        <span class="skill-icon">🔍</span>
+        <div class="skill-name">بحث ويب</div>
+        <div class="skill-desc">تفعيل البحث تلقائياً</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('اقرأ هذا الرابط وأخبرني بمحتواه: https://')">
+        <span class="skill-icon">🔗</span>
+        <div class="skill-name">قراءة رابط</div>
+        <div class="skill-desc">تحليل محتوى URL</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('ما هي آخر الأخبار عن: ')">
+        <span class="skill-icon">📰</span>
+        <div class="skill-name">آخر الأخبار</div>
+        <div class="skill-desc">أحداث حديثة</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('ابحث عن مستودع GitHub الخاص بـ: ')">
+        <span class="skill-icon">🐙</span>
+        <div class="skill-name">GitHub</div>
+        <div class="skill-desc">استكشاف مستودع</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════════════════ */
+const API_URL    = 'http://localhost:8081/v1/chat/completions';
+const SEARCH_URL = 'http://localhost:8081/v1/search';
+const MODELS = [
+  { id: 'gemini-3.5-flash',               label: 'Flash 3.5',         badge: 'سريع · الافتراضي' },
+  { id: 'gemini-3.5-flash-thinking',      label: 'Flash 3.5 Thinking', badge: 'تفكير عميق' },
+  { id: 'gemini-3.5-flash-thinking-lite', label: 'Flash 3.5 Lite',    badge: 'تفكير خفيف' },
+  { id: 'gemini-3.1-pro',                 label: 'Pro 3.1',            badge: 'قوي · يحتاج كوكي' },
+  { id: 'gemini-auto',                    label: 'Auto',               badge: 'اختيار تلقائي' },
+  { id: 'gemini-flash-lite',              label: 'Flash Lite',         badge: 'خفيف جداً' },
+];
+
+/* ═══════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════ */
+let conversations  = JSON.parse(localStorage.getItem('ali_convos')  || '[]');
+let currentTheme   = localStorage.getItem('ali_theme') || 'paper';
+const VALID_MODEL_IDS = ['gemini-3.5-flash','gemini-3.5-flash-thinking','gemini-3.5-flash-thinking-lite','gemini-3.1-pro','gemini-auto','gemini-flash-lite'];
+const _savedModel = localStorage.getItem('ali_model');
+let currentModel = (VALID_MODEL_IDS.includes(_savedModel) ? _savedModel : null) || 'gemini-3.5-flash';
+let currentConvoId = null;
+let messages       = [];
+let isLoading      = false;
+let sidebarOpen    = true;
+let webSearchOn    = true;
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+(function init() {
+  setTheme(currentTheme, true);
+  renderHistory();
+  if (conversations.length > 0) loadConvo(conversations[0].id);
+  if (typeof marked !== 'undefined') {
+    marked.setOptions({ breaks: true, gfm: true });
+    const renderer = new marked.Renderer();
+    renderer.link = function(href, title, text) {
+      const t = title ? ` title="${title}"` : '';
+      return `<a href="${href}"${t} target="_blank" rel="noopener noreferrer">${text}</a>`;
+    };
+    marked.use({ renderer });
+  }
+  // Reflect default-on web search in UI
+  document.getElementById('web-btn').classList.add('on');
+  document.getElementById('web-badge').classList.add('visible');
+  // Render model list & set current model display
+  renderModelPanel();
+  updateModelDisplay();
+
+  const d = new Date();
+  const el = document.getElementById('print-date');
+  if (el) el.textContent = d.toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════════════════ */
+function setTheme(theme, silent) {
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ali_theme', theme);
+
+  // Update swatch active state
+  document.querySelectorAll('.theme-swatch').forEach(el => {
+    el.classList.toggle('active', el.dataset.theme === theme);
+  });
+
+  if (!silent) { showToast('تم تغيير السمة ✦'); closeAllPanels(); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MODEL SELECTION
+═══════════════════════════════════════════════════════════ */
+function updateModelDisplay() {
+  const m = MODELS.find(x => x.id === currentModel) || MODELS[0];
+  const tag = document.getElementById('edition-tag');
+  const foot = document.getElementById('sidebar-model');
+  if (tag)  tag.textContent = 'ألي ' + m.label;
+  if (foot) foot.textContent = 'مدعوم بـ ' + m.label + ' · مجاناً بالكامل';
+}
+
+function renderModelPanel() {
+  const list = document.getElementById('model-list');
+  if (!list) return;
+  list.innerHTML = MODELS.map(m => `
+    <div class="model-item ${m.id === currentModel ? 'active' : ''}" onclick="setModel('${m.id}')">
+      <div class="model-item-main">
+        <div class="model-name">${m.label}</div>
+        <div class="model-id">${m.id}</div>
+      </div>
+      <div class="model-badge">${m.badge}</div>
+      <div class="model-check">✦</div>
+    </div>
+  `).join('');
+}
+
+function setModel(id) {
+  currentModel = id;
+  localStorage.setItem('ali_model', id);
+  renderModelPanel();
+  updateModelDisplay();
+  const m = MODELS.find(x => x.id === id) || MODELS[0];
+  showToast('النموذج: ' + m.label + ' ✦');
+  closeAllPanels();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PANELS
+═══════════════════════════════════════════════════════════ */
+let openPanelId = null;
+
+function openPanel(id) {
+  if (openPanelId === id) { closeAllPanels(); return; }
+  closeAllPanels();
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  panel.style.display = 'block';
+  requestAnimationFrame(() => {
+    panel.classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  });
+  openPanelId = id;
+}
+
+function closeAllPanels() {
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.remove('open');
+    setTimeout(() => { if (!p.classList.contains('open')) p.style.display = 'none'; }, 300);
+  });
+  document.getElementById('overlay').classList.remove('open');
+  openPanelId = null;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════════════ */
+function toggleSidebar() {
+  sidebarOpen = !sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WEB SEARCH
+═══════════════════════════════════════════════════════════ */
+function toggleWebSearch() {
+  webSearchOn = !webSearchOn;
+  document.getElementById('web-btn').classList.toggle('on', webSearchOn);
+  document.getElementById('web-badge').classList.toggle('visible', webSearchOn);
+  showToast(webSearchOn ? '🌐 بحث الويب مفعّل' : 'تم إيقاف بحث الويب');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SMART SEARCH TRIGGER
+═══════════════════════════════════════════════════════════ */
+function needsWebSearch(text) {
+  if (text.trim().length < 15) return false;
+  // Skip obvious conversational/acknowledgement messages
+  if (/^(ok|okay|thanks|شكرا|تمام|نعم|لا|yes|no|hi|مرحبا|هلا|صح|بالضبط|ممتاز|رائع|جيد|كيف حالك|i fixed|fixed it|cool|got it|understood|clear)/i.test(text.trim())) return false;
+  return true;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SKILLS
+═══════════════════════════════════════════════════════════ */
+function applySkill(template) {
+  closeAllPanels();
+  const input = document.getElementById('message-input');
+  input.value = template;
+  input.focus();
+  autoResize(input);
+  input.setSelectionRange(input.value.length, input.value.length);
+}
+
+function applySkillAndSearch(template) {
+  if (!webSearchOn) toggleWebSearch();
+  applySkill(template);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════════════════════ */
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (!conversations.length) {
+    el.innerHTML = '<div style="text-align:center;color:var(--ink35);font-size:12px;padding:20px 0;font-style:italic">لا توجد محادثات بعد</div>';
+    return;
+  }
+  el.innerHTML = conversations.map(c => `
+    <div class="history-item ${c.id === currentConvoId ? 'active' : ''}" onclick="loadConvo('${c.id}')">
+      <span style="opacity:.4;font-size:10px">✦</span>
+      <span>${escapeHtml(c.title)}</span>
+    </div>
+  `).join('');
+}
+
+function saveConvo() {
+  if (!currentConvoId || !messages.length) return;
+  const raw = messages[0].display || messages[0].content;
+  const title = raw.slice(0, 42) + (raw.length > 42 ? '…' : '');
+  const idx = conversations.findIndex(c => c.id === currentConvoId);
+  const data = { id: currentConvoId, title, messages };
+  if (idx >= 0) conversations[idx] = data;
+  else conversations.unshift(data);
+  localStorage.setItem('ali_convos', JSON.stringify(conversations.slice(0, 50)));
+  renderHistory();
+}
+
+function loadConvo(id) {
+  const c = conversations.find(c => c.id === id);
+  if (!c) return;
+  currentConvoId = id;
+  messages = c.messages;
+  document.getElementById('messages-container').innerHTML = '';
+  document.getElementById('welcome').style.display = 'none';
+  messages.forEach(m => appendBubble(m.role, m.display || m.content, false, m.webSearch, m.hasUrl));
+  renderHistory();
+  scrollBottom();
+}
+
+function newChat() {
+  currentConvoId = 'c_' + Date.now();
+  messages = [];
+  document.getElementById('messages-container').innerHTML = '';
+  document.getElementById('welcome').style.display = 'flex';
+  renderHistory();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MESSAGING
+═══════════════════════════════════════════════════════════ */
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+}
+
+function sendSuggestion(text) {
+  document.getElementById('message-input').value = text;
+  sendMessage();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('message-input');
+  const text  = input.value.trim();
+  if (!text || isLoading) return;
+
+  document.getElementById('welcome').style.display = 'none';
+  if (!currentConvoId) currentConvoId = 'c_' + Date.now();
+
+  const isWeb = webSearchOn;
+  input.value = '';
+  input.style.height = 'auto';
+  setLoading(true);
+
+  // ── URL detection & fetching ──────────────────────────
+  const urlMatch = text.match(/https?:\/\/[^\s]+/g);
+  let urlContext = '';
+  if (urlMatch) {
+    for (const url of urlMatch) {
+      showToast('⏳ جاري قراءة الرابط…');
+      const fetched = await fetchUrlContext(url);
+      if (fetched) urlContext += fetched + '\n\n';
+    }
+  }
+
+  // ── Real web search (skip if message already has a URL, or message is conversational) ──
+  let webContext = '';
+  let webSources = [];
+  if (isWeb && !urlMatch && needsWebSearch(text)) {
+    showToast('🌐 جاري البحث في الويب…');
+    const searchResult = await fetchWebSearch(text);
+    webContext = searchResult.text;
+    webSources = searchResult.sources;
+  }
+
+  // Build the API message content
+  let userContent = text;
+  if (urlContext) {
+    userContent += `\n\n[محتوى الروابط المرفقة — هذا محتوى حقيقي جلبته أداة القراءة]\n${urlContext}[انتهى محتوى الروابط]`;
+  }
+  if (webContext) {
+    userContent += `\n\n[نتائج البحث الحية من الإنترنت — هذه نتائج حقيقية ومحدّثة، استخدمها للإجابة]\n${webContext}\n[انتهت نتائج البحث — أجب بناءً عليها مباشرةً ولا تقل أنك لا تستطيع الوصول للإنترنت]`;
+  }
+
+  const hasUrl = urlMatch && urlContext.length > 0;
+  messages.push({ role: 'user', content: userContent, display: text, webSearch: isWeb, hasUrl });
+  appendBubble('user', text, true, isWeb, hasUrl);
+  scrollBottom();
+
+  try {
+    const aiText = await streamCompletion(messages, webSources);
+    messages.push({ role: 'assistant', content: aiText });
+    saveConvo();
+  } catch (err) {
+    appendBubble('error', 'حدث خطأ في الاتصال: ' + err.message);
+  }
+
+  setLoading(false);
+  scrollBottom();
+}
+
+/* ── URL FETCHER ─────────────────────────────────────────── */
+async function fetchUrlContext(url) {
+  try {
+    // GitHub repo  e.g. https://github.com/user/repo
+    const ghRepo = url.match(/^https?:\/\/github\.com\/([^/]+)\/([^/?#]+)\/?$/);
+    if (ghRepo) {
+      const [, owner, repo] = ghRepo;
+      return await fetchGitHubRepo(owner, repo);
+    }
+
+    // GitHub raw file or other public text
+    const isRaw = url.includes('raw.githubusercontent.com') || url.endsWith('.md') || url.endsWith('.txt') || url.endsWith('.json');
+    if (isRaw) {
+      const res = await fetch(url);
+      if (res.ok) {
+        const t = await res.text();
+        return `[محتوى: ${url}]\n${t.slice(0, 6000)}`;
+      }
+    }
+
+    return null;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function fetchGitHubRepo(owner, repo) {
+  const headers = { Accept: 'application/vnd.github+json' };
+  let result = `[مستودع GitHub: ${owner}/${repo}]\n`;
+
+  try {
+    // Repo meta
+    const meta = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
+    if (!meta.ok) {
+      // GitHub API blocked/private — fall back to web search for the repo
+      showToast('🔍 البحث عن المستودع…');
+      const { text: searchResults } = await fetchWebSearch(`${owner} ${repo} github`);
+      return `[مستودع GitHub: ${owner}/${repo}]\nتعذّر الوصول عبر GitHub API (قد يكون خاصاً أو تجاوزنا حد الطلبات).\n\nنتائج بحث الويب عن هذا المستودع:\n${searchResults}`;
+    }
+    const m = await meta.json();
+    result += `الاسم: ${m.full_name}\n`;
+    result += `الوصف: ${m.description || 'لا يوجد وصف'}\n`;
+    result += `اللغة: ${m.language || 'غير محدد'} | النجوم: ${m.stargazers_count} | Forks: ${m.forks_count}\n`;
+    result += `آخر تحديث: ${m.updated_at?.slice(0, 10)}\n\n`;
+  } catch (_) {}
+
+  try {
+    // File tree (top level)
+    const tree = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`, { headers });
+    if (tree.ok) {
+      const files = await tree.json();
+      if (Array.isArray(files)) {
+        result += `الملفات والمجلدات:\n`;
+        files.slice(0, 30).forEach(f => { result += `  ${f.type === 'dir' ? '📁' : '📄'} ${f.name}\n`; });
+        result += '\n';
+      }
+    }
+  } catch (_) {}
+
+  try {
+    // README — try main then master
+    for (const branch of ['main', 'master']) {
+      const readmeUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`;
+      const r = await fetch(readmeUrl);
+      if (r.ok) {
+        const txt = await r.text();
+        result += `README.md:\n${txt.slice(0, 5000)}\n`;
+        break;
+      }
+    }
+  } catch (_) {}
+
+  return result;
+}
+
+/* ── WEB SEARCH (via local server — DuckDuckGo + Wikipedia) ─ */
+async function fetchWebSearch(query) {
+  try {
+    const res = await fetch(`${SEARCH_URL}?q=${encodeURIComponent(query)}`);
+    if (!res.ok) throw new Error('search endpoint error');
+    const data = await res.json();
+    const items = data.results || [];
+    if (!items.length) return { text: 'لم يتم العثور على نتائج بحث.', sources: [] };
+
+    const text = items.map(r => {
+      const src = r.source ? `[${r.source}]` : '';
+      const url = r.url ? `\nالرابط: ${r.url}` : '';
+      return `${src} ${r.title}\n${r.snippet}${url}`;
+    }).join('\n\n');
+
+    const sources = items.filter(r => r.url).map(r => ({ title: r.title, url: r.url, source: r.source || '' }));
+    return { text, sources };
+  } catch (err) {
+    return { text: `خطأ في البحث: ${err.message}`, sources: [] };
+  }
+}
+
+async function streamCompletion(msgs, webSources) {
+  const systemMsg = {
+    role: 'user',
+    content: `أنت ألي AI — مساعد ذكي باللغتين العربية والإنجليزية. قواعد ثابتة:
+١. لديك أداة بحث ويب حقيقية وأداة قراءة روابط تعملان الآن.
+٢. أي نص بين [نتائج البحث الحية من الإنترنت] هو بيانات حقيقية محدّثة — استخدمها مباشرة للإجابة.
+٣. أي نص بين [محتوى الروابط المرفقة] هو محتوى فعلي جلبته أداة القراءة — ناقشه بتفصيل.
+٤. لا تقل أبداً "لا أستطيع الوصول للإنترنت" أو "ليس لدي أدوات بحث" — هذا خطأ.
+٥. إذا كانت نتائج البحث تقول إن مستودع GitHub خاص أو API فشل، وضّح ذلك للمستخدم بصدق.
+٦. أجب دائماً بنفس لغة المستخدم (عربي أو إنجليزي).`
+  };
+  const systemReply = { role: 'assistant', content: 'مفهوم تماماً. سأستخدم نتائج البحث وبيانات الروابط الموجودة في الرسائل للإجابة بدقة، ولن أدّعي عدم قدرتي على الوصول للإنترنت.' };
+
+  const apiMessages = [systemMsg, systemReply, ...msgs.map(m => ({
+    role: m.role === 'assistant' ? 'assistant' : 'user',
+    content: m.content
+  }))];
+
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: currentModel, messages: apiMessages, stream: true }),
+  });
+
+  if (!response.ok) throw new Error(await response.text());
+
+  const bubbleId = 'b_' + Date.now();
+  document.getElementById('messages-container').appendChild(createBubbleRow('ai', '', bubbleId));
+  scrollBottom();
+
+  const reader  = response.body.getReader();
+  const decoder = new TextDecoder();
+  let full = '', buf = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const data = line.slice(6).trim();
+      if (data === '[DONE]') break;
+      try {
+        const json  = JSON.parse(data);
+        const delta = json.choices?.[0]?.delta?.content || '';
+        full += delta;
+        const el = document.getElementById(bubbleId);
+        if (el) { el.innerHTML = renderMd(full); scrollBottom(); }
+      } catch (_) {}
+    }
+  }
+
+  // Append clickable source cards below the bubble
+  if (webSources && webSources.length) {
+    const bubbleRow = document.getElementById(bubbleId)?.closest('.message-row');
+    if (bubbleRow) {
+      const sourcesEl = document.createElement('div');
+      sourcesEl.className = 'search-sources';
+      sourcesEl.innerHTML = `<div class="search-sources-label">📌 المصادر</div>` +
+        webSources.map(s => `<a class="source-chip" href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(s.url)}">${escapeHtml(s.title || s.source || s.url)}</a>`).join('');
+      bubbleRow.querySelector('.msg-content').appendChild(sourcesEl);
+    }
+  }
+
+  return full;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UI HELPERS
+═══════════════════════════════════════════════════════════ */
+function appendBubble(role, content, anim, isWeb, hasUrl) {
+  if (role === 'error') {
+    const e = document.createElement('div');
+    e.className = 'error-bubble';
+    e.textContent = content;
+    document.getElementById('messages-container').appendChild(e);
+    return;
+  }
+  document.getElementById('messages-container').appendChild(createBubbleRow(role, content, null, isWeb, hasUrl));
+}
+
+function createBubbleRow(role, content, bubbleId, isWeb, hasUrl) {
+  const isUser = role === 'user';
+  const row    = document.createElement('div');
+  row.className = `message-row ${isUser ? 'user' : 'ai'}`;
+  const id = bubbleId || ('b_' + Date.now() + Math.random().toString(36).slice(2));
+  const body = isUser ? escapeHtml(content).replace(/\n/g, '<br>') : renderMd(content);
+
+  const tags = [
+    isWeb  ? '<span class="msg-web-tag">🌐 بحث الويب</span>' : '',
+    hasUrl ? '<span class="msg-url-tag">🔗 تم قراءة الرابط</span>' : '',
+  ].filter(Boolean).join('');
+
+  row.innerHTML = `
+    <div class="msg-avatar ${isUser ? 'user-av' : 'ali'}">${isUser ? 'أنت' : 'ألي'}</div>
+    <div class="msg-content">
+      <div class="msg-sender">${isUser ? 'أنت' : 'ألي AI'}</div>
+      ${tags ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${tags}</div>` : ''}
+      <div class="msg-bubble" id="${id}">${body}</div>
+      ${!isUser ? `<div class="msg-actions"><button class="msg-action-btn" onclick="copyMsg('${id}')">✦ نسخ</button><button class="msg-action-btn" onclick="regenerateLast('${id}')">↻ إعادة</button></div>` : ''}
+    </div>
+  `;
+
+  return row;
+}
+
+function renderMd(text) {
+  if (typeof marked === 'undefined') return escapeHtml(text).replace(/\n/g, '<br>');
+  try {
+    let html = marked.parse(text, { breaks: true, gfm: true });
+    // Wrap code blocks with copy-button header
+    html = html.replace(/<pre><code([^>]*)>/g, (match, attrs) => {
+      const langMatch = attrs.match(/class="language-([^"]+)"/);
+      const lang = langMatch ? langMatch[1] : '';
+      const badge = lang ? `<span class="code-lang">${lang}</span>` : '<span></span>';
+      return `<div class="code-block-wrap"><div class="code-header">${badge}<button class="code-copy-btn" onclick="copyCodeBlock(this)">📋 نسخ</button></div><pre><code${attrs}>`;
+    });
+    html = html.replace(/<\/code><\/pre>/g, '</code></pre></div>');
+    return html;
+  }
+  catch (_) { return escapeHtml(text).replace(/\n/g, '<br>'); }
+}
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function setLoading(on) {
+  isLoading = on;
+  document.getElementById('typing-indicator').classList.toggle('visible', on);
+  document.getElementById('send-btn').disabled = on;
+}
+
+function scrollBottom() {
+  const ca = document.getElementById('chat-area');
+  ca.scrollTo({ top: ca.scrollHeight, behavior: 'smooth' });
+}
+
+function copyMsg(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => showToast('تم النسخ ✦'));
+}
+
+function copyCodeBlock(btn) {
+  const code = btn.closest('.code-block-wrap')?.querySelector('code');
+  if (!code) return;
+  navigator.clipboard.writeText(code.innerText).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ تم';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  });
+}
+
+function regenerateLast(bubbleId) {
+  if (isLoading) return;
+  const lastIdx = messages.map(m => m.role).lastIndexOf('assistant');
+  if (lastIdx === -1) return;
+  messages.splice(lastIdx, 1);
+  document.getElementById(bubbleId)?.closest('.message-row')?.remove();
+  setLoading(true);
+  streamCompletion(messages).then(aiText => {
+    messages.push({ role: 'assistant', content: aiText });
+    saveConvo();
+  }).catch(err => {
+    appendBubble('error', 'حدث خطأ: ' + err.message);
+  }).finally(() => { setLoading(false); scrollBottom(); });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EXPORT
+═══════════════════════════════════════════════════════════ */
+function exportPDF() {
+  closeAllPanels();
+  setTimeout(() => window.print(), 300);
+}
+
+function exportTXT() {
+  if (!messages.length) { showToast('لا توجد رسائل للتصدير'); return; }
+  const lines = messages.map(m => {
+    const who = m.role === 'user' ? 'أنت' : 'ألي AI';
+    return `[${who}]\n${m.content}\n`;
+  });
+  const header = `ألي AI — محادثة\nالتاريخ: ${new Date().toLocaleDateString('ar-SA')}\n${'─'.repeat(40)}\n\n`;
+  downloadFile(header + lines.join('\n' + '─'.repeat(40) + '\n\n'), 'ali-chat.txt', 'text/plain');
+  closeAllPanels();
+  showToast('تم تصدير TXT ✦');
+}
+
+function exportMarkdown() {
+  if (!messages.length) { showToast('لا توجد رسائل للتصدير'); return; }
+  const lines = messages.map(m => {
+    const who = m.role === 'user' ? '**أنت**' : '**ألي AI**';
+    return `### ${who}\n\n${m.content}\n`;
+  });
+  const header = `# ألي AI — محادثة\n\n> ${new Date().toLocaleDateString('ar-SA')}\n\n---\n\n`;
+  downloadFile(header + lines.join('\n---\n\n'), 'ali-chat.md', 'text/markdown');
+  closeAllPanels();
+  showToast('تم تصدير Markdown ✦');
+}
+
+function copyAll() {
+  if (!messages.length) { showToast('لا توجد رسائل'); return; }
+  const text = messages.map(m => {
+    const who = m.role === 'user' ? 'أنت' : 'ألي AI';
+    return `${who}:\n${m.content}`;
+  }).join('\n\n────────────\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('تم نسخ المحادثة كاملة ✦');
+    closeAllPanels();
+  });
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* Skills panel needs special handling (slides from bottom) */
+const _orig = openPanel;
+</script>
+</body>
+</html>

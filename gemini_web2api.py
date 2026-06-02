@@ -340,6 +340,81 @@ def extract_response_text(raw: str) -> str:
     return clean_gemini_text(text)
 
 
+# ─── Web Search ──────────────────────────────────────────────────────────────
+
+def _web_search(query: str) -> list:
+    """Server-side web search: tries ddgs lib first, falls back to DDG API + Wikipedia."""
+    results = []
+
+    try:
+        try:
+            from ddgs import DDGS
+        except ImportError:
+            from duckduckgo_search import DDGS
+        with DDGS() as ddgs_client:
+            for r in ddgs_client.text(query, max_results=5):
+                results.append({
+                    "title": r.get("title", ""),
+                    "snippet": r.get("body", ""),
+                    "url": r.get("href", ""),
+                    "source": "DuckDuckGo",
+                })
+        if results:
+            return results
+    except Exception:
+        pass
+
+    try:
+        ddg_url = (
+            "https://api.duckduckgo.com/?q="
+            + urllib.parse.quote(query)
+            + "&format=json&no_html=1&skip_disambig=1"
+        )
+        req = urllib.request.Request(ddg_url, headers={"User-Agent": "Mozilla/5.0"})
+        ctx = ssl.create_default_context()
+        with urllib.request.urlopen(req, context=ctx, timeout=8) as resp:
+            ddg = json.loads(resp.read().decode())
+        if ddg.get("AbstractText"):
+            results.append({"title": ddg.get("Heading", "DuckDuckGo"), "snippet": ddg["AbstractText"],
+                            "url": ddg.get("AbstractURL", ""), "source": "DuckDuckGo"})
+        if ddg.get("Answer"):
+            results.append({"title": "Direct Answer", "snippet": ddg["Answer"], "url": "", "source": "DuckDuckGo"})
+        for t in (ddg.get("RelatedTopics") or [])[:4]:
+            if t.get("Text"):
+                results.append({"title": t["Text"][:80], "snippet": t["Text"],
+                                "url": t.get("FirstURL", ""), "source": "DuckDuckGo"})
+    except Exception:
+        pass
+
+    try:
+        is_arabic = bool(re.search(r'[؀-ۿ]', query))
+        langs = ["ar", "en"] if is_arabic else ["en", "ar"]
+        for lang in langs:
+            search_url = (
+                f"https://{lang}.wikipedia.org/w/api.php?action=opensearch"
+                f"&search={urllib.parse.quote(query)}&limit=3&format=json"
+            )
+            req = urllib.request.Request(search_url, headers={"User-Agent": "Mozilla/5.0"})
+            ctx = ssl.create_default_context()
+            with urllib.request.urlopen(req, context=ctx, timeout=8) as resp:
+                _, titles, descs, urls = json.loads(resp.read().decode())
+            if not titles:
+                continue
+            for i, title in enumerate(titles[:2]):
+                results.append({
+                    "title": title,
+                    "snippet": descs[i] if i < len(descs) else "",
+                    "url": urls[i] if i < len(urls) else "",
+                    "source": f"Wikipedia ({lang})",
+                })
+            if results:
+                break
+    except Exception:
+        pass
+
+    return results
+
+
 # ─── OpenAI Format Helpers ───────────────────────────────────────────────────
 
 def messages_to_prompt(messages: list, tools: list = None) -> str:
@@ -447,12 +522,24 @@ class GeminiHandler(BaseHTTPRequestHandler):
             elif self.path == "/":
                 self.send_json({"status": "ok", "version": __version__,
                                 "models": list(MODELS.keys())})
+            elif self.path.startswith("/v1/search"):
+                self._handle_search()
             else:
                 self.send_json({"error": "not found"}, 404)
         except (BrokenPipeError, ConnectionResetError):
             pass
         except Exception as e:
             log(f"GET error: {e}")
+
+    def _handle_search(self):
+        parsed = urllib.parse.urlparse(self.path)
+        params = urllib.parse.parse_qs(parsed.query)
+        query = params.get("q", [""])[0].strip()
+        if not query:
+            self.send_json({"error": "missing q parameter"}, 400)
+            return
+        results = _web_search(query)
+        self.send_json({"query": query, "results": results})
 
     def do_POST(self):
         try:
