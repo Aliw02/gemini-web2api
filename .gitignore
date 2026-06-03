@@ -7,3 +7,12 @@ __pycache__
 *.pyc
 .env
 config.json
+*.log
+
+# ide
+.vscode/
+.idea/
+
+# os
+.DS_Store
+Thumbs.db
