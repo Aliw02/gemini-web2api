@@ -349,8 +349,9 @@ body::before {
 .suggestion-card:hover .suggestion-text { color: var(--ink); }
 
 /* ── MESSAGES ── */
-.message-row { display: flex; margin-bottom: 28px; gap: 14px; animation: appear .35s ease both; }
+.message-row { display: flex; margin-bottom: 28px; gap: 14px; }
 .message-row.user { flex-direction: row-reverse; }
+.message-row.ai { animation: appear .35s ease both; }
 
 .msg-avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 2px; }
 .msg-avatar.ali { background: var(--stamp-bg); color: var(--stamp-fg); box-shadow: 1px 1px 0 var(--gold2); }
@@ -592,11 +593,11 @@ body::before {
 
 .skills-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--ink35); font-family: 'IM Fell English', serif; margin-bottom: 10px; }
 
-.skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 9px; margin-bottom: 20px; }
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
 
 .skill-card {
-  padding: 13px 14px; background: var(--bg2);
-  border: 1px solid var(--ink15); border-radius: 4px;
+  padding: 14px; background: var(--bg2);
+  border: 1px solid var(--ink15); border-radius: 5px;
   cursor: pointer; transition: all .2s ease; text-align: right;
   position: relative; overflow: hidden;
 }
@@ -604,9 +605,17 @@ body::before {
 .skill-card:hover { background: var(--bg3); border-color: var(--ink35); transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--bg4); }
 .skill-card:hover::before { transform: scaleX(1); }
 
-.skill-icon { font-size: 18px; margin-bottom: 7px; display: block; }
-.skill-name { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.2; }
-.skill-desc { font-size: 11px; color: var(--ink60); margin-top: 4px; line-height: 1.4; }
+.skill-icon { font-size: 20px; margin-bottom: 8px; display: block; }
+.skill-name { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.skill-desc { font-size: 11.5px; color: var(--ink60); margin-top: 5px; line-height: 1.5; }
+
+/* Responsive grid tiers */
+@media (max-width: 820px) {
+  .skills-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 9px; }
+}
+@media (max-width: 640px) {
+  .skills-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+}
 
 /* ── TOAST ── */
 #toast {
@@ -724,12 +733,11 @@ body::before {
   .model-list { padding: 8px 10px 16px; }
 
   /* Skills panel */
-  .skills-body { padding: 12px 14px 20px; }
-  .skills-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
-  .skill-card { padding: 10px 11px; }
-  .skill-icon { font-size: 16px; margin-bottom: 5px; }
-  .skill-name { font-size: 12px; }
-  .skill-desc { font-size: 10px; }
+  .skills-body { padding: 12px 12px 20px; }
+  .skill-card { padding: 11px 12px; }
+  .skill-icon { font-size: 17px; margin-bottom: 6px; }
+  .skill-name { font-size: 13px; }
+  .skill-desc { font-size: 11px; }
 
   /* Toast — higher on mobile to avoid keyboard */
   #toast { bottom: 100px; font-size: 12px; }
@@ -741,7 +749,11 @@ body::before {
   .hdr-btn { padding: 0 6px; font-size: 10px; }
   .msg-content { max-width: 93%; }
   .msg-bubble { font-size: 13px; padding: 10px 12px; }
-  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .skills-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .skill-card { padding: 10px; }
+  .skill-icon { font-size: 15px; margin-bottom: 4px; }
+  .skill-name { font-size: 12px; }
+  .skill-desc { font-size: 10px; }
 }
 </style>
 </head>
@@ -845,9 +857,11 @@ body::before {
         <!-- Toolbar -->
         <div class="input-toolbar">
           <button class="tool-btn" id="web-btn" onclick="toggleWebSearch()" title="تفعيل البحث في الإنترنت">🌐 بحث ويب</button>
+          <button class="tool-btn" id="url-btn" onclick="toggleUrlFetch()" title="تفعيل قراءة الروابط">🔗 قراءة روابط</button>
           <button class="tool-btn" onclick="openPanel('skills-panel')">✦ مهارات</button>
           <div class="toolbar-spacer"></div>
           <div class="web-search-badge" id="web-badge">🌐 وضع البحث مفعّل</div>
+          <div class="web-search-badge" id="url-badge">🔗 قراءة الروابط مفعّلة</div>
         </div>
 
         <!-- Input box -->
@@ -971,167 +985,195 @@ body::before {
   <div class="skills-handle" onclick="closeAllPanels()"></div>
   <div class="skills-body">
 
-    <div class="skills-section-title">✍️ الكتابة والمحتوى</div>
+    <div class="skills-section-title">🔧 PRODUCTION ENGINEERING</div>
     <div class="skills-grid">
-      <div class="skill-card" onclick="applySkill('أعد صياغة النص التالي بأسلوب أكثر احترافية:\n\n')">
-        <span class="skill-icon">✍️</span>
-        <div class="skill-name">إعادة صياغة</div>
-        <div class="skill-desc">تحسين الأسلوب</div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Senior SRE on-call for an e-commerce platform doing $1M/day.\n🎯 Your Goal: Debug and resolve a production outage — checkout API returning 503 errors at 2 AM with angry customers on Twitter.\n📋 Context: Last deploy rolled out 2 hours ago. PagerDuty alert triggered. Grafana shows error rate spiking from 0.1% to 45%. You have Datadog APM traces, slow query logs, and SSH access to canary instances.\n⚠️ Constraints: Must identify root cause within 30 min before VP escalation. Cannot rollback without understanding impact. Must post incident updates every 5 min in Slack.\n💡 Example: Check deploy diff → find a new JOIN added to the checkout query → inspect DB connection pool showing 100% saturation → the JOIN hits an unindexed foreign key → add index with CONCURRENTLY → verify p95 drops back to 120ms. Write the postmortem with timeline, RCA, and 3 action items.\n')">
+        <span class="skill-icon">🚨</span>
+        <div class="skill-name">Outage Debugging</div>
+        <div class="skill-desc">PagerDuty 503s — find the root cause in 30 min</div>
       </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي مقالاً عن: ')">
-        <span class="skill-icon">📰</span>
-        <div class="skill-name">كتابة مقال</div>
-        <div class="skill-desc">مقالة كاملة ومنظمة</div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Backend platform engineer for a B2B SaaS company with 10K API requests/sec.\n🎯 Your Goal: Investigate and fix a sudden p99 latency spike from 120ms to 8 seconds on the main customer-facing API.\n📋 Context: No recent deploy. Customers complaining in chat. Datadog trace waterfall shows most time in a specific microservice. CPU and memory look normal, but slow query log reveals a new pattern.\n⚠️ Constraints: Must find root cause without restarting services (losing in-memory state). This is a Tier-1 incident affecting SLA. Fix or workaround within 1 hour.\n💡 Example: Check recent config changes → review EXPLAIN ANALYZE for the slow query → discover PostgreSQL chose a sequential scan due to outdated statistics → run ANALYZE to refresh stats → query drops from 8s to 40ms. Add auto-analyze tuning and a cron to prevent recurrence.\n')">
+        <span class="skill-icon">📈</span>
+        <div class="skill-name">Latency Crisis</div>
+        <div class="skill-desc">p99 120ms → 8s — find the bottleneck now</div>
       </div>
-      <div class="skill-card" onclick="applySkill('لخّص النص التالي في نقاط مختصرة:\n\n')">
-        <span class="skill-icon">📋</span>
-        <div class="skill-name">تلخيص</div>
-        <div class="skill-desc">تلخيص أي نص</div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Senior database reliability engineer for a fintech platform processing $5M/day.\n🎯 Your Goal: Recover accidentally deleted customer transaction records from production PostgreSQL.\n📋 Context: A developer ran DELETE without WHERE on the transactions table (5M rows). Discovered 15 min later. WAL archiving is enabled. Compliance team demands zero data loss.\n⚠️ Constraints: Max 30 min downtime. Cannot restore full backup (too slow, loses recent transactions). Must verify integrity after recovery. Postmortem required.\n💡 Example: Stop the app immediately → take a base backup of current state → use pg_waldump to find the exact LSN of the offending DELETE → PITR restore to just before that LSN in a separate instance → extract the 5M rows → INSERT them back into live → verify row counts match → set up preventive measures: READ ONLY role for direct DB access, SQL linting in CI/CD.\n')">
+        <span class="skill-icon">💾</span>
+        <div class="skill-name">Data Recovery</div>
+        <div class="skill-desc">Accidental DELETE on prod — PITR to the rescue</div>
       </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي بريداً إلكترونياً احترافياً بخصوص: ')">
-        <span class="skill-icon">📧</span>
-        <div class="skill-name">بريد إلكتروني</div>
-        <div class="skill-desc">رسالة رسمية</div>
-      </div>
-    </div>
-
-    <div class="skills-section-title">🌐 الترجمة</div>
-    <div class="skills-grid">
-      <div class="skill-card" onclick="applySkill('ترجم النص التالي إلى الإنجليزية:\n\n')">
-        <span class="skill-icon">🇸🇦→🇬🇧</span>
-        <div class="skill-name">عربي → إنجليزي</div>
-        <div class="skill-desc">ترجمة دقيقة</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('Translate the following to Arabic:\n\n')">
-        <span class="skill-icon">🇬🇧→🇸🇦</span>
-        <div class="skill-name">English → عربي</div>
-        <div class="skill-desc">دقة عالية</div>
-      </div>
-    </div>
-
-    <div class="skills-section-title">💻 البرمجة</div>
-    <div class="skills-grid">
-      <div class="skill-card" onclick="applySkill('اشرح الكود التالي بالتفصيل:\n\n```\n')">
-        <span class="skill-icon">🔍</span>
-        <div class="skill-name">شرح كود</div>
-        <div class="skill-desc">فهم الأسطر</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('راجع الكود التالي وابحث عن الأخطاء والتحسينات:\n\n```\n')">
-        <span class="skill-icon">🐛</span>
-        <div class="skill-name">مراجعة كود</div>
-        <div class="skill-desc">كشف الأخطاء</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('الكود التالي لا يعمل، ابحث عن السبب وأصلحه:\n\n```\n')">
-        <span class="skill-icon">🔧</span>
-        <div class="skill-name">إصلاح كود</div>
-        <div class="skill-desc">debug وإصلاح</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('حسّن الكود التالي من حيث الأداء وجودة الكتابة:\n\n```\n')">
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Infrastructure engineer at a social media startup doing 10K req/s normally.\n🎯 Your Goal: Keep the platform online after a celebrity tweet sends traffic 20x above normal in 10 minutes.\n📋 Context: Normally 10K req/s, now 200K req/s and climbing. Autoscaling is lagging. Database CPU hits 95%. CDN helps static assets but dynamic endpoints are melting. CTO is watching the dashboard with VCs.\n⚠️ Constraints: Cannot change app code (no time). Must use operational levers: scaling, rate limiting, caching, read replicas. Must prioritize critical vs non-critical endpoints.\n💡 Example: Enable aggressive rate limiting on search and profile edit → promote 3 read replicas and direct read traffic there via pg_hba → configure Cloudflare caching for GET endpoints with stale-while-revalidate → increase ASG desired/max capacity and switch to proactive scaling → autoscaling catches up at 250K capacity → incrementally restore endpoints. Write the incident playbook for future viral events.\n')">
         <span class="skill-icon">⚡</span>
-        <div class="skill-name">تحسين الأداء</div>
-        <div class="skill-desc">refactor وتحسين</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي كوداً بلغة Python يقوم بـ: ')">
-        <span class="skill-icon">🐍</span>
-        <div class="skill-name">Python</div>
-        <div class="skill-desc">توليد كود</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي كوداً بلغة JavaScript يقوم بـ: ')">
-        <span class="skill-icon">🟨</span>
-        <div class="skill-name">JavaScript</div>
-        <div class="skill-desc">توليد كود</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي SQL query لـ: ')">
-        <span class="skill-icon">🗃️</span>
-        <div class="skill-name">SQL</div>
-        <div class="skill-desc">استعلامات قاعدة البيانات</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي regex pattern يطابق: ')">
-        <span class="skill-icon">🔤</span>
-        <div class="skill-name">Regex</div>
-        <div class="skill-desc">تعبيرات نمطية</div>
+        <div class="skill-name">Capacity Crisis</div>
+        <div class="skill-desc">20x traffic spike — keep the site alive</div>
       </div>
     </div>
 
-    <div class="skills-section-title">📊 التحليل والبحث</div>
+    <div class="skills-section-title">🏗️ SYSTEM ARCHITECTURE</div>
     <div class="skills-grid">
-      <div class="skill-card" onclick="applySkill('حلّل الأفكار التالية وأعطني رأيك المفصّل:\n\n')">
-        <span class="skill-icon">📊</span>
-        <div class="skill-name">تحليل</div>
-        <div class="skill-desc">تقييم متعمق</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('قارن بين ')">
-        <span class="skill-icon">⚖️</span>
-        <div class="skill-name">مقارنة</div>
-        <div class="skill-desc">مقارنة الخيارات</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('ما هي إيجابيات وسلبيات: ')">
-        <span class="skill-icon">🔄</span>
-        <div class="skill-name">إيجابيات وسلبيات</div>
-        <div class="skill-desc">تقييم الخيارات</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اقترح لي خطوات عملية لـ: ')">
-        <span class="skill-icon">🗺️</span>
-        <div class="skill-name">خطة عمل</div>
-        <div class="skill-desc">خطوات قابلة للتنفيذ</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اعطني 10 أفكار إبداعية عن: ')">
-        <span class="skill-icon">💡</span>
-        <div class="skill-name">عصف ذهني</div>
-        <div class="skill-desc">توليد أفكار</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اشرح لي هذا الموضوع بأسلوب بسيط جداً كأنني عمري 10 سنوات: ')">
-        <span class="skill-icon">👶</span>
-        <div class="skill-name">اشرح ببساطة</div>
-        <div class="skill-desc">شرح مبسط جداً</div>
-      </div>
-    </div>
-
-    <div class="skills-section-title">📱 التسويق والتواصل</div>
-    <div class="skills-grid">
-      <div class="skill-card" onclick="applySkill('اكتب لي منشور X/Twitter جذاب ومختصر عن: ')">
-        <span class="skill-icon">𝕏</span>
-        <div class="skill-name">منشور X</div>
-        <div class="skill-desc">تغريدة احترافية</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي منشور LinkedIn احترافي عن: ')">
-        <span class="skill-icon">💼</span>
-        <div class="skill-name">LinkedIn</div>
-        <div class="skill-desc">منشور مهني</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اكتب لي إعلاناً تسويقياً مقنعاً عن: ')">
-        <span class="skill-icon">📣</span>
-        <div class="skill-name">إعلان</div>
-        <div class="skill-desc">نص تسويقي</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('حسّن هذا الـ prompt ليكون أكثر دقة ووضوحاً:\n\n')">
-        <span class="skill-icon">🎯</span>
-        <div class="skill-name">تحسين Prompt</div>
-        <div class="skill-desc">صياغة أفضل</div>
-      </div>
-    </div>
-
-    <div class="skills-section-title">🌐 أدوات البحث والروابط</div>
-    <div class="skills-grid">
-      <div class="skill-card" onclick="applySkillAndSearch('ابحث عن: ')">
-        <span class="skill-icon">🔍</span>
-        <div class="skill-name">بحث ويب</div>
-        <div class="skill-desc">تفعيل البحث تلقائياً</div>
-      </div>
-      <div class="skill-card" onclick="applySkill('اقرأ هذا الرابط وأخبرني بمحتواه: https://')">
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Staff software engineer interviewing a senior candidate. The whiteboard is clean.\n🎯 Your Goal: Design a scalable URL shortener handling 100M URLs and 1B redirects/day with click analytics.\n📋 Context: Must generate short codes, handle redirects (301/302), track analytics (referrer, browser, timestamp), and expose an API. Traffic is 99% reads / 1% writes. AWS stack.\n⚠️ Constraints: Redirect latency < 5ms. Must handle 100K writes/sec during campaigns. Analytics eventually consistent within 5 min. Monthly AWS cost under $10K at launch.\n💡 Example: Base62 encoding with a distributed unique ID generator (Snowflake) for short codes → Redis cluster for hot URL caching with consistent hashing → Postgres as durable source of truth with read replicas → DynamoDB streams for click analytics → CDN edge caching for the top 1% of URLs. Estimate: 10TB storage/year, 10Gbps bandwidth. Single point of failure? Add Redis replica + Postgres streaming replica with auto-failover.\n')">
         <span class="skill-icon">🔗</span>
-        <div class="skill-name">قراءة رابط</div>
-        <div class="skill-desc">تحليل محتوى URL</div>
+        <div class="skill-name">URL Shortener</div>
+        <div class="skill-desc">100M URLs, 1B redirects/day — design it</div>
       </div>
-      <div class="skill-card" onclick="applySkill('ما هي آخر الأخبار عن: ')">
-        <span class="skill-icon">📰</span>
-        <div class="skill-name">آخر الأخبار</div>
-        <div class="skill-desc">أحداث حديثة</div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Principal engineer designing the next-gen messaging platform for 10M DAU.\n🎯 Your Goal: Architect a real-time chat system with group chats, file sharing, typing indicators, read receipts, and offline message delivery.\n📋 Context: Current system uses polling and hits limits. Must migrate to real-time. Kubernetes + Kafka stack. Messages must deliver reliably during network partitions.\n⚠️ Constraints: 1M+ concurrent WebSocket connections per cluster. Message delivery p99 < 100ms. Group chats up to 10K members. Chat history retained 1 year for compliance.\n💡 Example: WebSocket gateway with Redis pub/sub for presence and typing indicators → Kafka for message persistence and fan-out with per-partition ordering → Cassandra for chat history (time-series model with user_id + timestamp as composite key) → S3 for attachments with presigned URLs → CRDT-based last-read-marker syncing for multi-device. Capacity: each WebSocket connection ~10KB overhead, plan for 10GB RAM per 1M connections. Use connection pooling and message batching for group chat fan-out.\n')">
+        <span class="skill-icon">💬</span>
+        <div class="skill-name">Real-time Chat</div>
+        <div class="skill-desc">10M users, 1M WebSockets — architect it</div>
       </div>
-      <div class="skill-card" onclick="applySkill('ابحث عن مستودع GitHub الخاص بـ: ')">
-        <span class="skill-icon">🐙</span>
-        <div class="skill-name">GitHub</div>
-        <div class="skill-desc">استكشاف مستودع</div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Payments infrastructure architect for a global e-commerce platform.\n🎯 Your Goal: Design a reliable, idempotent, multi-currency payment processing system handling $10M/day across 50 countries.\n📋 Context: Must accept credit cards, PayPal, wire transfers, and BNPL. Each transaction goes through auth → capture → settlement → reconciliation. Ten+ payment gateways.\n⚠️ Constraints: 99.999% uptime (5 min downtime/year max). Idempotency — retry must never double-charge. Cross-border compliance (GDPR, PSD2, PCI-DSS). Daily reconciliation must balance within $0.01.\n💡 Example: Payment state machine with idempotency key enforced at DB level (unique constraint on idempotency_key + merchant_id) → Redis cache for fast idempotency check → Saga pattern for multi-step transactions with compensating transactions for failures → Anti-corruption layer for each payment gateway → Dead letter queue for failed reconciliation → PCI scope reduction via tokenization (Stripe/Vault). Fraud detection runs before capture using ML model served via ONNX with < 200ms inference.\n')">
+        <span class="skill-icon">💳</span>
+        <div class="skill-name">Payment System</div>
+        <div class="skill-desc">$10M/day, 50 countries — 99.999% uptime</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Media platform architect at a video streaming startup.\n🎯 Your Goal: Design a video streaming platform serving 10M concurrent viewers with sub-second start time and adaptive bitrate streaming.\n📋 Context: Users upload videos in various formats. System must transcode, store, and stream with HLS/DASH. Must support live streaming with < 5s latency. Viral events spike 100x in minutes.\n⚠️ Constraints: 4K HDR support. Startup time < 1s on mobile. Multi-CDN cost optimization. Geo-restriction per licensing. Uploads must be available for streaming within 5 min.\n💡 Example: Ingest pipeline with FFmpeg transcoding creating a ladder (240p to 4K) → segmented storage on S3 with multi-CDN (CloudFront + Fastly) → CMAF manifest generation → Player-side ABR logic with bandwidth estimation → Geo-blocking via CloudFront geo-restriction + licensing DB → Live pipeline: RTMP ingest → transcoding → HLS packaging → CDN with LL-HLS for low latency → DRM with Widevine/FairPlay key rotation. Compute cost: estimate GPU hours for transcoding, use spot instances for non-urgent encodes.\n')">
+        <span class="skill-icon">🎬</span>
+        <div class="skill-name">Video Platform</div>
+        <div class="skill-desc">10M viewers, 4K HDR, sub-second start</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">🔄 MIGRATION & REFACTORING</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Principal engineer leading the architecture modernization for a 500K-line Rails monolith.\n🎯 Your Goal: Break the monolith into well-defined microservices without stopping feature development.\n📋 Context: Monolith shared across 8 teams. Deployments take 2 hours. A single broken migration blocks all teams. Tangled dependencies with no clear domain boundaries. CTO wants a 12-month plan.\n⚠️ Constraints: 70% of sprint capacity goes to features, 30% to migration. Must maintain backward compatibility at every step. No big-bang rewrites. Must show quarterly progress (deployment time, velocity, coverage).\n💡 Example: Event storming workshops to identify bounded contexts → extract notifications first as the lowest-risk service using strangler fig pattern → share DB via views during transition → migrate to dedicated DB per service → async communication via RabbitMQ → service templates and shared observability stack → quarterly migration health dashboard. Metric targets: deploy time from 2h to 15min, team velocity +20%, test coverage from 40% to 80%.\n')">
+        <span class="skill-icon">🏗️</span>
+        <div class="skill-name">Monolith Breakup</div>
+        <div class="skill-desc">500K Rails → microservices, zero downtime</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Senior data platform engineer responsible for the core database migration.\n🎯 Your Goal: Migrate a 5TB MySQL database to PostgreSQL with zero downtime and no data loss.\n📋 Context: 200+ tables, stored procedures, triggers, full-text search. Debezium for CDC. Migration window is one weekend (48h). Business requires read-only access at worst, never full downtime.\n⚠️ Constraints: ENUM, JSON, GEOMETRY types must map correctly. Stored procedures rewritten as PL/pgSQL. Full-text search ranking differs — must verify. Schema migration testable and repeatable. Rollback plan tested.\n💡 Example: Schema assessment and type mapping → pgloader for initial sync with transformation rules → Debezium → Kafka → PG logical replication for ongoing sync → run parallel workloads comparing query results before cutover → application code changes behind feature flags → cutover with 5-min read-only window → rollback if row counts mismatch → post-migration: VACUUM, index rebuild, connection pool tuning, query plan analysis. Monitor replication lag during parallel run.\n')">
+        <span class="skill-icon">🗄️</span>
+        <div class="skill-name">DB Migration</div>
+        <div class="skill-desc">5TB MySQL → PostgreSQL, zero downtime</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: API platform architect at an enterprise with 20-year-old systems.\n🎯 Your Goal: Modernize 50+ legacy SOAP APIs to REST/GraphQL while keeping old endpoints running for backward compatibility.\n📋 Context: SOAP APIs power critical business workflows for 500+ internal apps and 100+ external partners. WSDLs are poorly documented. Unclear side effects. No API gateway currently.\n⚠️ Constraints: Old SOAP must work for 18+ months. New endpoints documented with OpenAPI/GraphQL. Incremental migration — partners migrate at their own pace. Must add rate limiting, auth, monitoring. Cannot modify SOAP services (vendor black box).\n💡 Example: Deploy Kong API gateway in front of both old SOAP and new REST endpoints → REST facades call SOAP internally via anti-corruption layer → generate OpenAPI 3.0 specs from WSDL analysis → GraphQL federation for complex cross-service queries → partner migration with deprecation headers (Sunset + Deprecation) → canary testing comparing old vs new response equivalence using diff tool → monitoring: p99 latency, error rate by partner, coverage of migrated endpoints.\n')">
+        <span class="skill-icon">🔌</span>
+        <div class="skill-name">API Modernization</div>
+        <div class="skill-desc">50 SOAP APIs → REST/GraphQL, gradual</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Cloud architect migrating a 500-server on-prem data center to AWS.\n🎯 Your Goal: Migrate 100+ applications to AWS within 12 months with minimal disruption.\n📋 Context: On-prem includes VMware VMs, physical Oracle databases, mainframe batch jobs, custom monitoring. $3M/year ops cost. Cloud budget approved at $2.5M/year.\n⚠️ Constraints: Follow the 6Rs strategy (Retire, Retain, Rehost, Replatform, Refactor, Repurchase). Oracle licenses expensive on cloud. Mainframe batch needs re-platforming. Compliance: encryption at rest/in transit. Some apps have hardcoded IPs.\n💡 Example: Discovery and assessment with AWS Migration Evaluator → design multi-account landing zone with Control Tower → wave planning with dependency graph → rehost low-risk apps using AWS MGN → replatform Oracle to RDS/Aurora with DMS → refactor mainframe batch to AWS Step Functions + Batch → Transit Gateway + Direct Connect for hybrid connectivity → implement backup, DR with CloudEndure → optimize with Compute Optimizer + RIs. Track progress with Migration Tracking Dashboard.\n')">
+        <span class="skill-icon">☁️</span>
+        <div class="skill-name">Cloud Migration</div>
+        <div class="skill-desc">500 on-prem servers → AWS in 12 months</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">📊 DATA PLATFORM</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Senior data engineer at a media company with 50M MAU.\n🎯 Your Goal: Design a real-time analytics pipeline processing 1M events/sec with < 100ms end-to-end latency for dashboards and alerting.\n📋 Context: Clickstream events from web, mobile, and APIs. Current batch pipeline runs hourly — too slow. Need real-time dashboards for engagement, content performance, anomaly detection.\n⚠️ Constraints: Exactly-once processing semantics. Enrichment requires joining with slowly-changing dimension tables. Must handle late-arriving events (up to 1 hour). Raw event storage < $500/TB/month.\n💡 Example: Kafka as ingestion layer with partitioning by user_id → Flink for stream processing with SQL and UDFs for enrichment → stateful join with broadcast state pattern for dimension tables → sink to ClickHouse for sub-second dashboard queries → S3/Parquet for archival with Iceberg → schema registry for event evolution → monitor consumer lag with Burrow → SLAs per pipeline stage with Prometheus alerts. Handle late data with allowed lateness + side output to dead letter queue.\n')">
+        <span class="skill-icon">📡</span>
+        <div class="skill-name">Real-time Pipeline</div>
+        <div class="skill-desc">1M events/sec, < 100ms latency</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: ML platform engineer at an e-commerce company with 10M products, 100M users.\n🎯 Your Goal: Build a production recommendation system serving personalized suggestions in < 50ms, improving conversion rate by 15%.\n📋 Context: User behavior data (views, clicks, purchases). Current system uses popularity rules. ML team built a two-tower model in PyTorch. A/B testing required from day one.\n⚠️ Constraints: Inference p99 < 50ms at 10K QPS. Model updates reflect new user behavior within 1 hour. Cold-start users need reasonable recommendations. Must exclude out-of-stock items. Respect user opt-out.\n💡 Example: Candidate generation via approximate nearest neighbor search (Faiss with IVF+PQ) → two-tower model exported to ONNX for inference → feature pipeline with real-time user embedding updates via Kafka → A/B testing with gradual 1%-5%-20%-100% rollout → fallback to popularity-based + trending for cold-start → business rule filter layer (stock, price range, category) → monitoring dashboard: CTR, diversity, novelty, coverage. Offline evaluation with NDCG, MRR, recall before deploying.\n')">
+        <span class="skill-icon">🎯</span>
+        <div class="skill-name">Recommendation Engine</div>
+        <div class="skill-desc">10M products, 100M users, < 50ms inference</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Analytics engineer building the central data platform for 100+ analysts.\n🎯 Your Goal: Design and implement a cloud data warehouse serving marketing, product, finance, and operations teams.\n📋 Context: Data from 50+ sources (Postgres, MongoDB, Shopify, Salesforce, Zendesk, Stripe, GA, Facebook Ads). Current setup uses prod DB queries (slow) and CSV exports (inconsistent).\n⚠️ Constraints: Must use Medallion architecture (Bronze → Silver → Gold). dbt for transformations. Batch daily + near-real-time (5 min) for critical sources. PII tokenized for non-privileged analysts. 1 year queryable in < 10s for common reports.\n💡 Example: Fivetran/Airbyte for source ingestion into BigQuery bronze layer → dbt staging models for type casting and dedup → silver layer with business entities and SCD2 dimensions → gold layer with pre-joined fact tables (revenue, marketing, product) → row-level security policies for PII columns → CI/CD with dbt test and docs generation → freshness SLAs per source with alerts → cost monitoring via INFORMATION_SCHEMA with budgets per domain. dbt metrics layer for consistent KPI definitions across teams.\n')">
+        <span class="skill-icon">🏛️</span>
+        <div class="skill-name">Data Warehouse</div>
+        <div class="skill-desc">50 sources, 100 analysts, Medallion + dbt</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: ML infrastructure engineer building the platform for deploying ML models.\n🎯 Your Goal: Build a production ML serving platform handling 50+ models across PyTorch, TensorFlow, scikit-learn, XGBoost with latencies from 1ms to 500ms.\n📋 Context: Data scientists train models in notebooks and manually deploy Docker containers. No standards. Need A/B testing, canary deployments, drift monitoring, auto-rollback.\n⚠️ Constraints: GPU inference for deep learning. Model versioning with point-in-time queries. Auto-scaling in < 30s. Request logging for audit (inputs/outputs). Model cold-start must not cause timeouts.\n💡 Example: MLflow for model registry with version management and lineage → KServe on Kubernetes for standard serving → inference graph with pre/post-processing transformers → GPU sharing via MIG/MPS for cost efficiency → request batching for throughput optimization → canary with traffic splitting (5% → 25% → 100%) → Prometheus metrics: latency, throughput, prediction count, data drift → Evidently for drift detection with auto-rollback → model pre-loading and warmup requests on deploy to avoid cold-start latency.\n')">
+        <span class="skill-icon">🤖</span>
+        <div class="skill-name">ML Serving</div>
+        <div class="skill-desc">50 models, GPU serving, canary + drift detection</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">🔐 SECURITY ENGINEERING</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Senior security incident responder at a SaaS company with sensitive customer data.\n🎯 Your Goal: Investigate and contain a data breach — AWS GuardDuty alert shows 5TB of PII downloaded from a production S3 bucket from an unknown IP.\n📋 Context: Alert shows 5TB downloaded in 2 hours from an unexpected IP range. The access key belongs to a service account that should only have write permissions. CloudTrail and VPC flow logs available. CEO notified.\n⚠️ Constraints: Contain within 15 min. Cannot disrupt production traffic. Preserve forensic evidence. Identify the root access vector. Written incident timeline for SOC 2 notification.\n💡 Example: Immediately rotate the compromised access key → apply S3 bucket policy to deny all access except from known VPC endpoints → analyze CloudTrail for source IP and user agent → trace through VPC flow logs to identify the compromised EC2 instance → check IAM last accessed to assess blast radius → take immutable snapshot of the bucket for forensics via S3 Object Lock → write incident timeline: detection time, containment time, evidence preserved, root cause (leaked key in public GitHub repo). Action items: secret scanner in CI/CD, GitHub secret scanning, IAM access analyzer.\n')">
+        <span class="skill-icon">🛡️</span>
+        <div class="skill-name">Breach Response</div>
+        <div class="skill-desc">5TB PII leaked — contain in 15 min</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Security architect reviewing a money-transfer API feature launching in 4 weeks.\n🎯 Your Goal: Perform a thorough threat model using STRIDE methodology and produce a prioritized mitigation plan.\n📋 Context: New feature allows authenticated users to transfer money to other users and external bank accounts via Plaid. Processes $5M/day. New microservice communicating with ledger and notification services.\n⚠️ Constraints: Must use STRIDE per element in the data flow diagram. Each threat gets a DREAD score, mitigation, and test case. Present findings to engineering with action plan. Auth handled by existing OAuth 2.0.\n💡 Example: Draw DFD with trust boundaries (User → API → Transfer → Ledger → Bank) → apply STRIDE to each: (Spoofing) attacker impersonates another user → mitigate with JWT signature verification + user_id from token not request body. (Tampering) modify transfer amount in transit → request signing + TLS + idempotency key validated server-side. (Repudiation) user claims they did not authorize → audit log with digital signature. (Info Disclosure) error message leaks balance → generic error responses. (DoS) rate limit per user per endpoint. (Elevation of Privilege) call admin endpoint → RBAC at gateway.\n')">
+        <span class="skill-icon">⚠️</span>
+        <div class="skill-name">Threat Modeling</div>
+        <div class="skill-desc">STRIDE + DREAD for a payment feature</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Platform security engineer designing the company identity and access management system.\n🎯 Your Goal: Design a multi-tenant auth system supporting SSO, MFA, social login, and API access with OAuth 2.0 and OIDC.\n📋 Context: B2B SaaS platform. Enterprise customers require SAML/SSO. Consumers use email+password or social login (Google, GitHub). Mobile apps need native auth. Internal microservices need service-to-service auth.\n⚠️ Constraints: Authorization code flow with PKCE for mobile. OIDC for identity layer. JWTs signed with RS256. Refresh token rotation with revocation. 100K logins/min throughput. Passwords: argon2id. Rate limiting per IP and per user.\n💡 Example: Authorization server with OAuth 2.0 + OIDC compliance → well-known discovery endpoint → PKCE flow with S256 code challenge for mobile/native → SAML 2.0 federation via identity provider proxy → MFA enrollment with TOTP + WebAuthn hardware keys → token lifecycle: access 15min, refresh 30 days with rotation and family tracking → JWKS endpoint for public key distribution → audit log for every auth event (login, token refresh, MFA, SSO) → rate limiting with token bucket per user_id and per IP.\n')">
+        <span class="skill-icon">🔑</span>
+        <div class="skill-name">Auth System</div>
+        <div class="skill-desc">OAuth 2.0 + OIDC + SAML + MFA at scale</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Security compliance engineer preparing for a first SOC 2 Type II audit.\n🎯 Your Goal: Identify compliance gaps, implement controls, and prepare evidence artifacts for SOC 2 and GDPR within 6 months.\n📋 Context: B2B SaaS processing customer data. Major enterprise deal requires SOC 2. EU users require GDPR compliance. Current security practices are ad-hoc with no formal policies.\n⚠️ Constraints: Cover all 5 trust criteria (Security, Availability, Processing, Confidentiality, Privacy). GDPR: data mapping, DPA, breach notification, retention/deletion. Evidence covering 3+ months. Automated collection preferred.\n💡 Example: Gap analysis against SOC 2 criteria → create policies (access control, incident response, change management, backup, encryption) → deploy Vanta/Drift for automated evidence collection → Article 30 data mapping exercise with all data flows → DPA templates for each subprocessor (AWS, Stripe, SendGrid) → vulnerability management with quarterly Qualys scans → access review automation (every 90 days) → incident response tabletop exercise with documented outcomes and timing → evidence: backup logs, access reviews, vulnerability scan reports, penetration test results, employee security training completion.\n')">
+        <span class="skill-icon">✅</span>
+        <div class="skill-name">Compliance Audit</div>
+        <div class="skill-desc">SOC 2 + GDPR ready in 6 months</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">🚀 PERFORMANCE & SRE</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Performance engineer preparing for a product launch expected to bring 100K concurrent users.\n🎯 Your Goal: Design and execute a load testing strategy validating the system handles 2x expected traffic and identifies all bottlenecks before launch.\n📋 Context: React + Node.js + Postgres + Redis. Launch in 3 weeks. Previous launches had post-go-live performance issues. Team uses k6 and Grafana.\n⚠️ Constraints: Must simulate realistic user behavior. Staging environment mirrors production. Tests must cover API, DB, cache, infrastructure. Include soak (4h+) and spike (5x surge) testing. Pass/fail criteria: p99 < 500ms, error rate < 1%.\n💡 Example: Design scenarios from production traffic patterns → k6 scripts with realistic think times and navigation flows → staged ramp-up from 1K to 200K VUs → monitor in real-time with Grafana → at 80K VUs, DB CPU hits 90% → investigate slow queries → find an N+1 in the product listing endpoint → fix with eager loading → rerun — system passes at 200K VUs with p99 320ms → document capacity per resource (max DB connections, Redis memory, Node event loop lag) → create launch-day runbook with scale-up triggers and kill switches.\n')">
+        <span class="skill-icon">🧪</span>
+        <div class="skill-name">Load Testing</div>
+        <div class="skill-desc">100K users — validate before launch day</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Database performance engineer called to fix critical slow queries timing out at 30 seconds.\n🎯 Your Goal: Optimize dashboard queries joining 8 tables over 50M+ rows, affecting 5000 internal users.\n📋 Context: Dashboard loads customer transaction history, balances, risk scores. Query plan shows sequential scans on 200M-row tables. Schema changes require a migration taking weeks.\n⚠️ Constraints: Cannot modify app code without full deployment. Can add indexes online (CONCURRENTLY). Can create views or materialized views. Must not increase write latency beyond 5%.\n💡 Example: Capture the slow query with auto_explain + pg_stat_statements → EXPLAIN (ANALYZE, BUFFERS) reveals sequential scan on transactions table → add composite index on (user_id, created_at DESC) including amount and status columns → test with EXPLAIN — index scan now → query drops from 30s to 800ms → create materialized view for daily aggregations refreshed every 5 min via pg_cron → monitor index usage with pg_stat_user_indexes → configure statement_timeout to 5s to prevent future runaway queries. Measure write latency before and after: +2%, well within limit.\n')">
+        <span class="skill-icon">🔍</span>
+        <div class="skill-name">Query Tuning</div>
+        <div class="skill-desc">30s query → 800ms, no schema changes</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Backend infrastructure engineer reducing database load and improving response times.\n🎯 Your Goal: Design a multi-layer caching strategy reducing DB read load by 80% and p99 latency from 200ms to under 20ms.\n📋 Context: Read-heavy workload (95% reads, 5% writes). User profiles, product catalog, sessions, analytics. Currently hitting Postgres for every request. Redis used only for sessions. DB CPU at 70%.\n⚠️ Constraints: Stale data acceptable for at most 5 min (most endpoints). Payments and inventory must be strongly consistent. Prevent cache stampede on popular key expiry. Redis budget 20GB. Handle Redis failover gracefully.\n💡 Example: Classify data by cacheability → product catalog: CDN (CloudFront) + Redis with cache-aside + local L1 cache → user profiles: write-through with Redis → session data: Redis TTL (already done) → analytics: lazy caching with background refresh → probabilistic early expiration (X fetch early if TTL < 10% remaining) to prevent stampede → cache warming for top 1000 products on deploy → degrade gracefully on Redis failover: fall back to DB with circuit breaker. Monitor: hit rate per pattern, memory usage, eviction rate. Target: 80%+ hit rate, < 5% stale reads.\n')">
+        <span class="skill-icon">⚡</span>
+        <div class="skill-name">Caching Strategy</div>
+        <div class="skill-desc">80% DB load reduction, < 20ms p99</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Site reliability engineer implementing an SLO-driven reliability framework.\n🎯 Your Goal: Define SLOs for 10 critical services, implement burn-rate alerting, and establish an error budget policy balancing reliability with feature velocity.\n📋 Context: Current monitoring uses static thresholds (CPU > 80%) generating too many false positives. Developers ignore alerts. 99.9% uptime but customers complain about slowness and errors.\n⚠️ Constraints: Google SRE methodology (SLI → SLO → error budget). 3+ SLIs per service (latency, availability, throughput). Error budgets calculated weekly. Multi-window, multi-burn-rate alerts.\n💡 Example: For API Gateway: SLIs — latency p99 < 500ms measured over 5-min window, availability = ratio of successful (2xx/4xx), throughput = requests/sec → SLO: 99.9% of requests complete in < 500ms over 30-day rolling window → error budget = 0.1% of total requests in 30 days → implement multi-window burn-rate alerts: 1h/5% budget consumed (page), 6h/10% (ticket), 3d/20% (ticket) → error budget report in weekly engineering all-hands → when budget exhausted: all features frozen except bug fixes and reliability improvements. Postmortem template for every budget exhaustion event.\n')">
+        <span class="skill-icon">📋</span>
+        <div class="skill-name">SLO Framework</div>
+        <div class="skill-desc">SLI → SLO → error budget for 10 services</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">👥 TECHNICAL LEADERSHIP</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Tech lead proposing a critical infrastructure change — migrating from single-node Redis to Redis Cluster.\n🎯 Your Goal: Write a comprehensive RFC design document that gets buy-in from 5 engineering teams and CTO approval.\n📋 Context: Single-node Redis at 75% memory (15GB/20GB), CPU spikes to 90% during peak. No failover — if Redis goes down, the entire platform degrades. Needs buy-in from teams that depend on Redis.\n⚠️ Constraints: Follow company RFC template: Problem, Goals & Non-Goals, Proposed Solution, Alternatives, Migration Plan, Rollback, Open Questions. Include capacity planning with data. Reviewed by 3 senior engineers.\n💡 Example: Problem: single point of failure, memory pressure, no horizontal scaling. Goals: HA with auto-failover, scale to 50GB, zero-downtime migration. Solution: Redis Cluster with 3 masters + 3 replicas, hash slots for data distribution. Migration: enable AOF → configure replica → switch DNS → monitor replication lag → decommission old node. Rollback: keep old instance for 1 week. Alternatives: Elasticache (vendor lock-in but managed), KeyDB (multi-threaded but less proven), Dragonfly (promising but new). Open questions: client library compatibility, pipeline behavior during resharding.\n')">
+        <span class="skill-icon">📝</span>
+        <div class="skill-name">RFC Writing</div>
+        <div class="skill-desc">Design doc: Redis Cluster migration proposal</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Senior engineer reviewing a high-risk PR adding payment integration — 3000 lines, Stripe API, credit card tokenization, PCI-DSS scope.\n🎯 Your Goal: Perform a thorough code review identifying security vulnerabilities, performance issues, and design flaws before this ships to production handling $1M+/month.\n📋 Context: PR adds: payment API endpoint, Stripe SDK integration, webhook handler, payment token DB migration, debug logging. Author is a mid-level developer new to payments.\n⚠️ Constraints: Check: SQL injection, XSS, CSRF, IDOR (users accessing others payment data), SSRF, PII in logs, insecure crypto, hardcoded secrets. Stripe webhook signature validation required. Idempotency for retries.\n💡 Example: Verify raw card data is never logged or stored (PCI-DSS) → check Stripe webhook signature validation using stripe-signature header (SSRF prevention) → test IDOR by modifying user_id in payment request — must return 403 → verify rate limiting on payment endpoint — 10 req/min per user → error messages must not leak stack traces or Stripe secrets → confirm idempotency key enforced at DB level with unique constraint on (idempotency_key, merchant_id) → review Stripe secret storage — must use Vault or environment variable, never in code. Write findings as: severity, impact, PoC, fix recommendation.\n')">
+        <span class="skill-icon">👁️</span>
+        <div class="skill-name">Code Review</div>
+        <div class="skill-desc">3000-line payment PR — find all vulnerabilities</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Principal engineer facilitating a critical technology choice for the database platform.\n🎯 Your Goal: Make a data-driven decision between PostgreSQL with app-level sharding vs CockroachDB for a globally distributed multi-region database. Produce a complete ADR.\n📋 Context: Company expanding to EU and APAC regions. Current Postgres primary in US-East. EU users experience 200ms latency. Multi-tenant SaaS with strong consistency for financial data.\n⚠️ Constraints: Evaluate: consistency model (CockroachDB serializable vs Postgres), latency (multi-region vs read replicas), operational complexity, licensing, learning curve, migration effort. Include benchmarks. Address CAP trade-offs.\n💡 Example: Define weighted criteria: consistency 30%, latency 25%, ops 20%, cost 15%, learning curve 10%. Postgres + app sharding: read replicas in each region with synchronous replication for failover, application handles routing and shard rebalancing. CockroachDB: regional-by-row tables for latency optimization, serializable isolation across regions, automatic rebalancing. Benchmark with realistic workload: 8K TPS with 200ms cross-region latency. Decision: CockroachDB for new multi-region services, Postgres for existing single-region. ADR: status=accepted, context=global expansion, consequences=team training, new ops tooling, licensing cost.\n')">
+        <span class="skill-icon">⚖️</span>
+        <div class="skill-name">Tech Decision</div>
+        <div class="skill-desc">Postgres sharding vs CockroachDB — choose wisely</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Engineering manager facilitating a blameless postmortem after a 45-minute outage costing $500K.\n🎯 Your Goal: Write a comprehensive incident postmortem with timeline, root cause, contributing factors, and action items with owners and due dates.\n📋 Context: Outage 3 days ago. Root cause: a misconfigured DB migration caused full table lock, cascading to connection pool exhaustion, API timeouts, complete outage. On-call rolled back after 25 min. Full recovery 45 min. CTO wants postmortem by end of week.\n⚠️ Constraints: Blameless — focus on system failures, not human errors. Template: Timeline, Impact, Root Cause, Contributing Factors, Detection, Response, Action Items (S1 prevent, S2 detect, S3 respond). Present to full engineering org.\n💡 Example: Timeline (UTC): 14:00 migration deployed, 14:12 first alert (DB connections at 80%), 14:15 PagerDuty, 14:17 on-call acknowledged, 14:23 rollback started, 14:25 connections recovering, 14:45 full recovery. Root cause: ALTER TABLE ... ADD COLUMN DEFAULT triggered full table rewrite on 500M-row table, exclusive lock blocked all queries. Contributing factors: no locking timeout (lock_timeout=0), no migration review process, no canary deployment. S1 action: migration linting in CI (owner: platform team, 2 weeks). S1: set lock_timeout = 5s on DDL (1 week). S2: migration canary — run DDL on a read replica first (1 month). S3: improve rollback runbook with exact commands (1 week).\n')">
+        <span class="skill-icon">📖</span>
+        <div class="skill-name">Postmortem</div>
+        <div class="skill-desc">500K outage — blameless RCA + action items</div>
+      </div>
+    </div>
+
+    <div class="skills-section-title">🛠️ RESEARCH & TOOLS</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="applySkillAndSearch('🏆 Your Role: Technical advisor evaluating a technology for the next 5 years.\n🎯 Your Goal: Perform deep due diligence on a technology (e.g., Kafka vs Redpanda, or a new database) and produce a recommendation with benchmarks and risk analysis.\n📋 Context: Decision affects 10+ teams and $2M+ in infrastructure costs. You have 2 weeks. You can run benchmarks, interview references, review architecture. CTO decides based on your report.\n⚠️ Constraints: Evaluate: technical capabilities, community health, ops maturity, licensing, TCO, migration effort. Include POC with top 3 use cases. Identify lock-in risks and single points of failure.\n💡 Example: Start your research by describing the technology you want evaluated. I will: analyze community metrics (GitHub stars, commit frequency, maintainer diversity, issue response time), set up a POC cluster with realistic workload, benchmark throughput and latency p50/p99/p999, test failure scenarios (leader election, partition recovery), calculate 3-year TCO including licensing + infrastructure + ops headcount, assess vendor lock-in risk, produce a decision matrix with weighted criteria and a clear recommendation with confidence level.\n')">
+        <span class="skill-icon">🔍</span>
+        <div class="skill-name">Deep Research</div>
+        <div class="skill-desc">Tech due diligence with benchmarks + TCO</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Senior engineer debugging a mysterious heisenbug that has been open for 3 months across 3 teams.\n🎯 Your Goal: Debug a race condition causing random data corruption in user profiles affecting 0.1% of users. You are the last resort before the CEO escalates.\n📋 Context: Some users see other users names and email addresses on their profile for about 5 seconds after login. Not reproducible in staging. Happens during peak hours (10 AM - 2 PM). Go service, Redis cache, Postgres, load balancer.\n⚠️ Constraints: Cannot add logging that slows the hot path. Cannot take the service down. Must produce a hypothesis with evidence before code changes. Fix must be minimal and low-risk. Write a regression test.\n💡 Example: Describe your bug scenario. I will: analyze the code path with the provided context, reproduce by simulating concurrent requests with delayed profile loads, add structured logging with request IDs to trace the cache path, discover that Redis returns stale data when a user session migrates to a different pod (session affinity breaks cache locality), fix by including session_token_hash in the cache key to prevent cross-user cache hits, validate with 1000 iterations of concurrent load test, write an integration test that reliably catches the race condition with t.Parallel() and -race flag.\n')">
+        <span class="skill-icon">🐛</span>
+        <div class="skill-name">Debug Session</div>
+        <div class="skill-desc">Heisenbug — race condition, 3 months unsolved</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Performance architect auditing a slow e-commerce application.\n🎯 Your Goal: Identify and fix all performance bottlenecks — frontend, API, database, infrastructure — to achieve Lighthouse 95+ and API p99 < 200ms.\n📋 Context: 500K daily visitors. Page load time 8s. Conversion rate 2.3% (industry avg 3.5%). Stack: React SPA, Node.js, Postgres, Redis, Cloudflare. Each 1s improvement = $1M/year.\n⚠️ Constraints: Measure before and after for every optimization. Must work without JS. Core Web Vitals: LCP < 2.5s, FID < 100ms, CLS < 0.1. Cannot break A/B tests. Prioritize by impact/effort.\n💡 Example: Provide a URL or describe the app. I will: analyze Lighthouse report and identify the largest time sinks, recommend responsive images with srcset and WebP/AVIF, fix N+1 queries with dataloader, implement Redis cache warming for top products, address CLS from dynamic ad injection with CSS aspect-ratio, measure improvements (LCP 6.2s → 1.8s), produce a 90-day roadmap prioritized by impact/effort ratio, and provide before/after metrics for every optimization.\n')">
+        <span class="skill-icon">🚀</span>
+        <div class="skill-name">Performance Audit</div>
+        <div class="skill-desc">Lighthouse 95+, p99 < 200ms, 90-day plan</div>
+      </div>
+      <div class="skill-card" onclick="applySkill('🏆 Your Role: Systems architect reviewing a new microservice design before any code is written.\n🎯 Your Goal: Review a proposed architecture for a notification service sending 10M emails, 5M push, 1M SMS/day across 3 channels. Identify design flaws, scalability concerns, and reliability gaps.\n📋 Context: Team produced: design doc, C4 diagrams, sequence diagrams, API spec. 4 developers, 3 months. Integrates with SendGrid, Firebase, Twilio.\n⚠️ Constraints: Review: failure modes, delivery semantics (exactly-once vs at-least-once), idempotency, backpressure/rate limiting, retry with DLQ, template rendering perf, observability. Each finding: severity (blocker/critical/major/minor), impact, fix.\n💡 Example: Describe your system architecture or provide the design doc URL. I will review it and identify issues like: single queue for all notification types (blocker — SMS provider outage blocks email delivery, fix: separate queues per channel with priorities), missing idempotency key (blocker — retries cause duplicate notifications, fix: idempotency key with Redis dedup), no rate limiting adapter (major — Twilio limit is 10 msg/sec, fix: token bucket per provider), no template caching (major — 10M emails rendered server-side would be slow, fix: pre-render and cache templates), no health check or circuit breaker for providers (critical — provider outage causes cascading failures, fix: circuit breaker with half-open state).\n')">
+        <span class="skill-icon">📐</span>
+        <div class="skill-name">Architecture Review</div>
+        <div class="skill-desc">Pre-build design review — find flaws early</div>
       </div>
     </div>
 
@@ -1166,13 +1208,48 @@ let currentModel = (VALID_MODEL_IDS.includes(_savedModel) ? _savedModel : null) 
 let currentConvoId = null;
 let messages       = [];
 let isLoading      = false;
+let _lastWebSources = [];
 let sidebarOpen    = true;
-let webSearchOn    = true;
+let webSearchOn    = JSON.parse(localStorage.getItem('ali_webSearch') || 'true');
+let urlFetchOn     = JSON.parse(localStorage.getItem('ali_urlFetch') || 'true');
+const urlCache     = new Map();
+const CACHE_TTL    = 24 * 60 * 60 * 1000;
+
+/* ═══════════════════════════════════════════════════════════
+   PREFS
+═══════════════════════════════════════════════════════════ */
+function _savePrefs() {
+  localStorage.setItem('ali_webSearch', JSON.stringify(webSearchOn));
+  localStorage.setItem('ali_urlFetch', JSON.stringify(urlFetchOn));
+}
+
+function _loadPrefs() {
+  const ws = localStorage.getItem('ali_webSearch');
+  if (ws !== null) webSearchOn = JSON.parse(ws);
+  const uf = localStorage.getItem('ali_urlFetch');
+  if (uf !== null) urlFetchOn = JSON.parse(uf);
+}
+
+function getCachedUrl(key) {
+  const entry = urlCache.get(key);
+  if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.content;
+  if (entry) urlCache.delete(key);
+  return null;
+}
+
+function setCachedUrl(key, content) {
+  urlCache.set(key, { ts: Date.now(), content });
+}
+
+function bustUrlCache(key) {
+  urlCache.delete(key);
+}
 
 /* ═══════════════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════════════ */
 (function init() {
+  _loadPrefs();
   setTheme(currentTheme, true);
   renderHistory();
   if (conversations.length > 0) loadConvo(conversations[0].id);
@@ -1185,9 +1262,11 @@ let webSearchOn    = true;
     };
     marked.use({ renderer });
   }
-  // Reflect default-on web search in UI
-  document.getElementById('web-btn').classList.add('on');
-  document.getElementById('web-badge').classList.add('visible');
+  // Reflect toggle states in UI
+  document.getElementById('web-btn').classList.toggle('on', webSearchOn);
+  document.getElementById('web-badge').classList.toggle('visible', webSearchOn);
+  document.getElementById('url-btn').classList.toggle('on', urlFetchOn);
+  document.getElementById('url-badge').classList.toggle('visible', urlFetchOn);
   // Render model list & set current model display
   renderModelPanel();
   updateModelDisplay();
@@ -1291,7 +1370,19 @@ function toggleWebSearch() {
   webSearchOn = !webSearchOn;
   document.getElementById('web-btn').classList.toggle('on', webSearchOn);
   document.getElementById('web-badge').classList.toggle('visible', webSearchOn);
+  _savePrefs();
   showToast(webSearchOn ? '🌐 بحث الويب مفعّل' : 'تم إيقاف بحث الويب');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   URL FETCH TOGGLE
+═══════════════════════════════════════════════════════════ */
+function toggleUrlFetch() {
+  urlFetchOn = !urlFetchOn;
+  document.getElementById('url-btn').classList.toggle('on', urlFetchOn);
+  document.getElementById('url-badge').classList.toggle('visible', urlFetchOn);
+  _savePrefs();
+  showToast(urlFetchOn ? '🔗 قراءة الروابط مفعّلة' : 'تم إيقاف قراءة الروابط');
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1338,12 +1429,22 @@ function renderHistory() {
   `).join('');
 }
 
+function _stripInjectedBlocks(content) {
+  const urlBlockRegex = /\[\s*محتوى الروابط المرفقة[\s\S]*?انتهى محتوى الروابط\s*\]/g;
+  const webBlockRegex = /\[\s*نتائج البحث الحية من الإنترنت[\s\S]*?انتهت نتائج البحث[\s\S]*?\]/g;
+  return content.replace(urlBlockRegex, '').replace(webBlockRegex, '').trim();
+}
+
 function saveConvo() {
   if (!currentConvoId || !messages.length) return;
   const raw = messages[0].display || messages[0].content;
   const title = raw.slice(0, 42) + (raw.length > 42 ? '…' : '');
   const idx = conversations.findIndex(c => c.id === currentConvoId);
-  const data = { id: currentConvoId, title, messages };
+  const cleanMsgs = messages.map(m => ({
+    ...m,
+    content: m.display ? _stripInjectedBlocks(m.content) : m.content
+  }));
+  const data = { id: currentConvoId, title, messages: cleanMsgs };
   if (idx >= 0) conversations[idx] = data;
   else conversations.unshift(data);
   localStorage.setItem('ali_convos', JSON.stringify(conversations.slice(0, 50)));
@@ -1365,6 +1466,7 @@ function loadConvo(id) {
 function newChat() {
   currentConvoId = 'c_' + Date.now();
   messages = [];
+  urlCache.clear();
   document.getElementById('messages-container').innerHTML = '';
   document.getElementById('welcome').style.display = 'flex';
   renderHistory();
@@ -1403,7 +1505,7 @@ async function sendMessage() {
   // ── URL detection & fetching ──────────────────────────
   const urlMatch = text.match(/https?:\/\/[^\s]+/g);
   let urlContext = '';
-  if (urlMatch) {
+  if (urlFetchOn && urlMatch) {
     for (const url of urlMatch) {
       showToast('⏳ جاري قراءة الرابط…');
       const fetched = await fetchUrlContext(url);
@@ -1433,9 +1535,10 @@ async function sendMessage() {
   const hasUrl = urlMatch && urlContext.length > 0;
   messages.push({ role: 'user', content: userContent, display: text, webSearch: isWeb, hasUrl });
   appendBubble('user', text, true, isWeb, hasUrl);
-  scrollBottom();
+  requestAnimationFrame(() => scrollBottom());
 
   try {
+    _lastWebSources = webSources;
     const aiText = await streamCompletion(messages, webSources);
     messages.push({ role: 'assistant', content: aiText });
     saveConvo();
@@ -1444,28 +1547,73 @@ async function sendMessage() {
   }
 
   setLoading(false);
-  scrollBottom();
+  requestAnimationFrame(() => scrollBottom());
 }
 
 /* ── URL FETCHER ─────────────────────────────────────────── */
 async function fetchUrlContext(url) {
+  // Check cache first
+  const cached = getCachedUrl(url);
+  if (cached) return cached;
+
   try {
-    // GitHub repo  e.g. https://github.com/user/repo
+    // GitHub repo root  e.g. https://github.com/user/repo
     const ghRepo = url.match(/^https?:\/\/github\.com\/([^/]+)\/([^/?#]+)\/?$/);
     if (ghRepo) {
       const [, owner, repo] = ghRepo;
-      return await fetchGitHubRepo(owner, repo);
+      const content = await fetchGitHubRepo(owner, repo);
+      if (content) setCachedUrl(url, content);
+      return content;
+    }
+
+    // GitHub blob/tree URL  e.g. https://github.com/user/repo/blob/main/README.md
+    const ghBlob = url.match(/^https?:\/\/github\.com\/([^/]+)\/([^/?#]+)\/(?:blob|tree)\/([^/]+)\/(.+)$/);
+    if (ghBlob) {
+      const [, owner, repo, ref, path] = ghBlob;
+      const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${path}`;
+      const res = await fetch(rawUrl, { cache: 'no-store' });
+      if (res.ok) {
+        const t = await res.text();
+        const content = `[محتوى: ${url}]\n${t.slice(0, 6000)}`;
+        setCachedUrl(url, content);
+        return content;
+      }
+    }
+
+    // GitHub issues/PR/pull URL → fall back to meta-only
+    const ghMeta = url.match(/^https?:\/\/github\.com\/([^/]+)\/([^/?#]+)\/?/);
+    if (ghMeta) {
+      const [, owner, repo] = ghMeta;
+      const content = await fetchGitHubRepo(owner, repo);
+      if (content) setCachedUrl(url, content);
+      return content;
     }
 
     // GitHub raw file or other public text
     const isRaw = url.includes('raw.githubusercontent.com') || url.endsWith('.md') || url.endsWith('.txt') || url.endsWith('.json');
     if (isRaw) {
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const t = await res.text();
-        return `[محتوى: ${url}]\n${t.slice(0, 6000)}`;
+        const content = `[محتوى: ${url}]\n${t.slice(0, 6000)}`;
+        setCachedUrl(url, content);
+        return content;
       }
     }
+
+    // Generic HTML → text fallback for any other https:// URL
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (res.ok) {
+        const html = await res.text();
+        const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 5000);
+        if (text.length > 50) {
+          const content = `[محتوى: ${url}]\n${text}`;
+          setCachedUrl(url, content);
+          return content;
+        }
+      }
+    } catch (_) {}
 
     return null;
   } catch (_) {
@@ -1474,13 +1622,22 @@ async function fetchUrlContext(url) {
 }
 
 async function fetchGitHubRepo(owner, repo) {
+  const cacheKey = `gh:${owner}/${repo}`;
+  const cached = getCachedUrl(cacheKey);
+  if (cached) return `[مستودع GitHub: ${owner}/${repo}]\n${cached}`;
+
   const headers = { Accept: 'application/vnd.github+json' };
-  let result = `[مستودع GitHub: ${owner}/${repo}]\n`;
+  let result = '';
 
   try {
-    // Repo meta
-    const meta = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
+    // Repo meta with no-store to avoid stale rate-limit data
+    const meta = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers, cache: 'no-store' });
     if (!meta.ok) {
+      const rateRemaining = meta.headers.get('X-RateLimit-Remaining');
+      if (rateRemaining === '0') {
+        showToast('⚠️ GitHub API rate limit reached — حاول لاحقاً');
+        return `[مستودع GitHub: ${owner}/${repo}]\nتعذّر الوصول: تم تجاوز حد طلبات GitHub API (60/ساعة). حاول مرة أخرى لاحقاً.\n`;
+      }
       // GitHub API blocked/private — fall back to web search for the repo
       showToast('🔍 البحث عن المستودع…');
       const { text: searchResults } = await fetchWebSearch(`${owner} ${repo} github`);
@@ -1495,8 +1652,13 @@ async function fetchGitHubRepo(owner, repo) {
 
   try {
     // File tree (top level)
-    const tree = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`, { headers });
+    const tree = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`, { headers, cache: 'no-store' });
     if (tree.ok) {
+      const rateRemaining = tree.headers.get('X-RateLimit-Remaining');
+      if (rateRemaining === '0') {
+        showToast('⚠️ GitHub API rate limit');
+        return `[مستودع GitHub: ${owner}/${repo}]\nتعذّر الوصول: تم تجاوز حد طلبات GitHub API.\n${result ? 'بيانات جزئية:\n' + result : ''}`;
+      }
       const files = await tree.json();
       if (Array.isArray(files)) {
         result += `الملفات والمجلدات:\n`;
@@ -1510,7 +1672,7 @@ async function fetchGitHubRepo(owner, repo) {
     // README — try main then master
     for (const branch of ['main', 'master']) {
       const readmeUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`;
-      const r = await fetch(readmeUrl);
+      const r = await fetch(readmeUrl, { cache: 'no-store' });
       if (r.ok) {
         const txt = await r.text();
         result += `README.md:\n${txt.slice(0, 5000)}\n`;
@@ -1519,7 +1681,8 @@ async function fetchGitHubRepo(owner, repo) {
     }
   } catch (_) {}
 
-  return result;
+  setCachedUrl(cacheKey, result);
+  return `[مستودع GitHub: ${owner}/${repo}]\n${result}`;
 }
 
 /* ── WEB SEARCH (via local server — DuckDuckGo + Wikipedia) ─ */
@@ -1578,16 +1741,17 @@ async function streamCompletion(msgs, webSources) {
   const decoder = new TextDecoder();
   let full = '', buf = '';
 
+  let doneReceived = false;
   while (true) {
     const { done, value } = await reader.read();
-    if (done) break;
+    if (done || doneReceived) break;
     buf += decoder.decode(value, { stream: true });
     const lines = buf.split('\n');
     buf = lines.pop();
     for (const line of lines) {
       if (!line.startsWith('data: ')) continue;
       const data = line.slice(6).trim();
-      if (data === '[DONE]') break;
+      if (data === '[DONE]') { doneReceived = true; break; }
       try {
         const json  = JSON.parse(data);
         const delta = json.choices?.[0]?.delta?.content || '';
@@ -1616,7 +1780,7 @@ async function streamCompletion(msgs, webSources) {
 /* ═══════════════════════════════════════════════════════════
    UI HELPERS
 ═══════════════════════════════════════════════════════════ */
-function appendBubble(role, content, anim, isWeb, hasUrl) {
+function appendBubble(role, content, _anim, isWeb, hasUrl) {
   if (role === 'error') {
     const e = document.createElement('div');
     e.className = 'error-bubble';
@@ -1625,6 +1789,21 @@ function appendBubble(role, content, anim, isWeb, hasUrl) {
     return;
   }
   document.getElementById('messages-container').appendChild(createBubbleRow(role, content, null, isWeb, hasUrl));
+}
+
+function bustAndRefetchUrl(bubbleId) {
+  if (isLoading) return;
+  const lastIdx = messages.map(m => m.role).lastIndexOf('user');
+  if (lastIdx === -1) return;
+  const userMsg = messages[lastIdx];
+  const urls = userMsg.display ? userMsg.display.match(/https?:\/\/[^\s]+/g) : null;
+  if (!urls) return showToast('⚠️ لا يوجد رابط في هذه الرسالة');
+  urls.forEach(u => bustUrlCache(u));
+  showToast('🔄 تم مسح الخبأ، أعد إرسال السؤال لتحديث البيانات');
+  const input = document.getElementById('message-input');
+  input.value = userMsg.display || userMsg.content;
+  autoResize(input);
+  input.focus();
 }
 
 function createBubbleRow(role, content, bubbleId, isWeb, hasUrl) {
@@ -1646,6 +1825,7 @@ function createBubbleRow(role, content, bubbleId, isWeb, hasUrl) {
       ${tags ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${tags}</div>` : ''}
       <div class="msg-bubble" id="${id}">${body}</div>
       ${!isUser ? `<div class="msg-actions"><button class="msg-action-btn" onclick="copyMsg('${id}')">✦ نسخ</button><button class="msg-action-btn" onclick="regenerateLast('${id}')">↻ إعادة</button></div>` : ''}
+      ${isUser && hasUrl ? `<div class="msg-actions"><button class="msg-action-btn" onclick="bustAndRefetchUrl('${id}')">🔄 تحديث الرابط</button></div>` : ''}
     </div>
   `;
 
@@ -1702,12 +1882,12 @@ function copyCodeBlock(btn) {
 
 function regenerateLast(bubbleId) {
   if (isLoading) return;
+  setLoading(true);
   const lastIdx = messages.map(m => m.role).lastIndexOf('assistant');
-  if (lastIdx === -1) return;
+  if (lastIdx === -1) { setLoading(false); return; }
   messages.splice(lastIdx, 1);
   document.getElementById(bubbleId)?.closest('.message-row')?.remove();
-  setLoading(true);
-  streamCompletion(messages).then(aiText => {
+  streamCompletion(messages, _lastWebSources).then(aiText => {
     messages.push({ role: 'assistant', content: aiText });
     saveConvo();
   }).catch(err => {
@@ -1734,7 +1914,8 @@ function exportTXT() {
   if (!messages.length) { showToast('لا توجد رسائل للتصدير'); return; }
   const lines = messages.map(m => {
     const who = m.role === 'user' ? 'أنت' : 'ألي AI';
-    return `[${who}]\n${m.content}\n`;
+    const text = m.display || m.content;
+    return `[${who}]\n${text}\n`;
   });
   const header = `ألي AI — محادثة\nالتاريخ: ${new Date().toLocaleDateString('ar-SA')}\n${'─'.repeat(40)}\n\n`;
   downloadFile(header + lines.join('\n' + '─'.repeat(40) + '\n\n'), 'ali-chat.txt', 'text/plain');
@@ -1746,7 +1927,8 @@ function exportMarkdown() {
   if (!messages.length) { showToast('لا توجد رسائل للتصدير'); return; }
   const lines = messages.map(m => {
     const who = m.role === 'user' ? '**أنت**' : '**ألي AI**';
-    return `### ${who}\n\n${m.content}\n`;
+    const text = m.display || m.content;
+    return `### ${who}\n\n${text}\n`;
   });
   const header = `# ألي AI — محادثة\n\n> ${new Date().toLocaleDateString('ar-SA')}\n\n---\n\n`;
   downloadFile(header + lines.join('\n---\n\n'), 'ali-chat.md', 'text/markdown');
@@ -1758,7 +1940,8 @@ function copyAll() {
   if (!messages.length) { showToast('لا توجد رسائل'); return; }
   const text = messages.map(m => {
     const who = m.role === 'user' ? 'أنت' : 'ألي AI';
-    return `${who}:\n${m.content}`;
+    const content = m.display || m.content;
+    return `${who}:\n${content}`;
   }).join('\n\n────────────\n\n');
   navigator.clipboard.writeText(text).then(() => {
     showToast('تم نسخ المحادثة كاملة ✦');

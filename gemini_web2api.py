@@ -46,6 +46,8 @@ except ImportError:
 
 __version__ = "1.1.0"
 
+_CHAT_HTML = os.path.join(os.path.dirname(os.path.realpath(__file__)), "ali-chat.html")
+
 # ─── Configuration ───────────────────────────────────────────────────────────
 
 DEFAULT_CONFIG = {
@@ -53,7 +55,7 @@ DEFAULT_CONFIG = {
     "host": "0.0.0.0",
     "retry_attempts": 3,
     "retry_delay_sec": 2,
-    "request_timeout_sec": 180,
+    "request_timeout_sec": 900,
     "gemini_bl": "boq_assistant-bard-web-server_20260525.09_p0",
     "auth_user": None,
     "xsrf_token": None,
@@ -513,11 +515,10 @@ class GeminiHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def _serve_chat_ui(self):
-        html_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ali-chat.html')
-        if not os.path.exists(html_path):
-            self.send_json({"status": "ok", "version": __version__, "models": list(MODELS.keys())})
+        if not os.path.exists(_CHAT_HTML):
+            self.send_error(404, "ali-chat.html not found")
             return
-        with open(html_path, 'rb') as f:
+        with open(_CHAT_HTML, "rb") as f:
             content = f.read()
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")

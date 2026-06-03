@@ -3,12 +3,16 @@ import json
 import time
 import uuid
 import re
+import os
+import mimetypes
 import urllib.parse
 import urllib.request
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 
 from .config import CONFIG
+
+FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
 from .models import MODELS, resolve_model
 from .gemini import generate, generate_stream, log
 from .tools import messages_to_prompt, parse_tool_calls, google_contents_to_prompt, parse_google_function_calls
@@ -192,8 +196,34 @@ class GeminiHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "*")
         self.end_headers()
 
+    def _serve_static(self, path: str):
+        """Serve static files from frontend/dist/."""
+        if path == "/":
+            path = "/index.html"
+        file_path = os.path.normpath(FRONTEND_DIR + path)
+        if not file_path.startswith(os.path.normpath(FRONTEND_DIR)):
+            self.send_json({"error": "forbidden"}, 403)
+            return
+        if not os.path.isfile(file_path):
+            file_path = os.path.join(FRONTEND_DIR, "index.html")
+        try:
+            mime, _ = mimetypes.guess_type(file_path)
+            with open(file_path, "rb") as f:
+                data = f.read()
+            self.send_response(200)
+            self.send_header("Content-Type", mime or "application/octet-stream")
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(data)
+        except OSError:
+            self.send_json({"error": "not found"}, 404)
+
     def do_GET(self):
         try:
+            if self.path == "/" or self.path.startswith("/assets/"):
+                self._serve_static(self.path)
+                return
             if self.path.startswith("/v1/") and not self._authorized():
                 self.send_json({"error": {"message": "invalid api key"}}, 401)
                 return
@@ -209,12 +239,12 @@ class GeminiHandler(BaseHTTPRequestHandler):
                      "supportedGenerationMethods": ["generateContent", "streamGenerateContent"]}
                     for n, c in MODELS.items()
                 ]})
-            elif self.path == "/":
-                self.send_json({"status": "ok", "version": __version__, "models": list(MODELS.keys())})
             elif self.path.startswith("/v1/search"):
                 self._handle_search()
+            elif self.path.startswith("/v1/"):
+                self.send_json({"error": {"message": "not found"}}, 404)
             else:
-                self.send_json({"error": "not found"}, 404)
+                self._serve_static(self.path)
         except (BrokenPipeError, ConnectionResetError):
             pass
 

@@ -7,7 +7,7 @@ DEFAULT_CONFIG = {
     "host": "0.0.0.0",
     "retry_attempts": 3,
     "retry_delay_sec": 2,
-    "request_timeout_sec": 180,
+    "request_timeout_sec": 900,
     "gemini_bl": "boq_assistant-bard-web-server_20260525.09_p0",
     "auth_user": None,
     "xsrf_token": None,

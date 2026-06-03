@@ -1,0 +1,127 @@
+/* ═══════════════════════════════════════════════════════════
+   THEME TOKENS — 4 themes: Paper, Night, Sepia, Slate
+═══════════════════════════════════════════════════════════ */
+
+[data-theme="paper"] {
+  --bg:          #F4EFE4;
+  --bg2:         #EDE6D6;
+  --bg3:         #E4DAC6;
+  --bg4:         #D9CEB5;
+  --ink:         #1C1409;
+  --ink60:       rgba(28,20,9,.6);
+  --ink35:       rgba(28,20,9,.35);
+  --ink15:       rgba(28,20,9,.15);
+  --ink08:       rgba(28,20,9,.08);
+  --gold:        #8B6914;
+  --gold2:       #C49A2A;
+  --goldfaint:   rgba(139,105,20,.08);
+  --rust:        #8B2E14;
+  --accent:      #1A3A5C;
+  --line:        rgba(28,20,9,.12);
+  --shadow:      rgba(28,20,9,.18);
+  --ruled-line:  rgba(28,20,9,.06);
+  --margin-line: rgba(139,46,20,.2);
+  --bubble-user-bg: #EEE8D8;
+  --bubble-ai-bg:   #F8F5EE;
+  --sidebar-bg:  #E8E0CE;
+  --header-bg:   #F0EBE0;
+  --input-bg:    #EDE6D6;
+  --noise-op:    0.05;
+  --stamp-bg:    #1C1409;
+  --stamp-fg:    #F4EFE4;
+  --success:     #2A7A4A;
+  --danger:      #8B2E14;
+}
+
+[data-theme="night"] {
+  --bg:          #141008;
+  --bg2:         #1C160C;
+  --bg3:         #231B10;
+  --bg4:         #2A2014;
+  --ink:         #EDE6D6;
+  --ink60:       rgba(237,230,214,.6);
+  --ink35:       rgba(237,230,214,.35);
+  --ink15:       rgba(237,230,214,.12);
+  --ink08:       rgba(237,230,214,.06);
+  --gold:        #C49A2A;
+  --gold2:       #F5C842;
+  --goldfaint:   rgba(196,154,42,.1);
+  --rust:        #D4614A;
+  --accent:      #6BA8E0;
+  --line:        rgba(237,230,214,.1);
+  --shadow:      rgba(0,0,0,.5);
+  --ruled-line:  rgba(237,230,214,.04);
+  --margin-line: rgba(196,154,42,.18);
+  --bubble-user-bg: #1F180C;
+  --bubble-ai-bg:   #1A1409;
+  --sidebar-bg:  #110E07;
+  --header-bg:   #0E0B05;
+  --input-bg:    #1C160C;
+  --noise-op:    0.04;
+  --stamp-bg:    #C49A2A;
+  --stamp-fg:    #141008;
+  --success:     #4CAF50;
+  --danger:      #D4614A;
+}
+
+[data-theme="sepia"] {
+  --bg:          #F0E2C8;
+  --bg2:         #E8D6B8;
+  --bg3:         #DDC9A4;
+  --bg4:         #CEBC90;
+  --ink:         #2D1A06;
+  --ink60:       rgba(45,26,6,.6);
+  --ink35:       rgba(45,26,6,.35);
+  --ink15:       rgba(45,26,6,.15);
+  --ink08:       rgba(45,26,6,.08);
+  --gold:        #7A4F0A;
+  --gold2:       #B07818;
+  --goldfaint:   rgba(122,79,10,.08);
+  --rust:        #7A2008;
+  --accent:      #2C4E7A;
+  --line:        rgba(45,26,6,.14);
+  --shadow:      rgba(45,26,6,.22);
+  --ruled-line:  rgba(45,26,6,.06);
+  --margin-line: rgba(122,32,8,.2);
+  --bubble-user-bg: #E5D3B4;
+  --bubble-ai-bg:   #EEE0C6;
+  --sidebar-bg:  #DFD0B0;
+  --header-bg:   #E8D8BA;
+  --input-bg:    #E4D4B4;
+  --noise-op:    0.06;
+  --stamp-bg:    #2D1A06;
+  --stamp-fg:    #F0E2C8;
+  --success:     #3D7A3D;
+  --danger:      #7A2008;
+}
+
+[data-theme="slate"] {
+  --bg:          #F0F2F5;
+  --bg2:         #E6E9EE;
+  --bg3:         #D8DCE4;
+  --bg4:         #C8CDD8;
+  --ink:         #12192B;
+  --ink60:       rgba(18,25,43,.6);
+  --ink35:       rgba(18,25,43,.35);
+  --ink15:       rgba(18,25,43,.13);
+  --ink08:       rgba(18,25,43,.07);
+  --gold:        #1A4A8C;
+  --gold2:       #2E6AC8;
+  --goldfaint:   rgba(26,74,140,.08);
+  --rust:        #8B1A2E;
+  --accent:      #1A4A8C;
+  --line:        rgba(18,25,43,.12);
+  --shadow:      rgba(18,25,43,.2);
+  --ruled-line:  rgba(18,25,43,.05);
+  --margin-line: rgba(139,26,46,.18);
+  --bubble-user-bg: #E0E5EE;
+  --bubble-ai-bg:   #EBEEf4;
+  --sidebar-bg:  #E2E6ED;
+  --header-bg:   #E8EBF0;
+  --input-bg:    #E4E8EE;
+  --noise-op:    0.04;
+  --stamp-bg:    #12192B;
+  --stamp-fg:    #F0F2F5;
+  --success:     #2E7D5A;
+  --danger:      #8B1A2E;
+}

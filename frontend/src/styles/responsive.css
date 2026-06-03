@@ -1,0 +1,97 @@
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE — Tablet, Mobile, Tiny screen breakpoints
+═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  #sidebar { position: fixed; right: 0; top: 0; bottom: 0; z-index: 100; }
+  #sidebar.collapsed { transform: translateX(100%); width: 260px; min-width: 260px; }
+  #main::after { display: none; }
+  .messages-inner { max-width: 100%; padding: 0 20px; }
+  .input-wrapper { max-width: 100%; }
+  #theme-panel, #export-panel, #model-panel, #think-panel, #sysprompt-panel, #server-panel {
+    left: 12px; right: 12px; width: auto; top: 60px;
+  }
+  .main-area { padding: 24px 16px; }
+}
+
+@media (max-width: 600px) {
+  #header { padding: 8px 12px; gap: 8px; }
+  .header-name { font-size: 16px; }
+  .header-sub  { display: none; }
+  .header-stamp { width: 30px; height: 30px; font-size: 10px; }
+  .edition-tag { display: none; }
+  .hdr-btn { height: 30px; padding: 0 8px; font-size: 11px; gap: 4px; }
+  .hdr-btn svg { width: 12px; height: 12px; }
+
+  #sidebar { width: 280px; min-width: 280px; }
+  #sidebar.collapsed { transform: translateX(100%); }
+
+  #chat-area { padding: 20px 0 16px; }
+  .messages-inner { padding: 0 12px; }
+
+  #welcome { min-height: 65vh; padding: 0 16px; }
+  .masthead-top { font-size: 9px; letter-spacing: 2px; }
+  .masthead-title { font-size: 42px; }
+  .masthead-title sup { display: none; }
+  .masthead-sub { font-size: 14px; margin-bottom: 24px; }
+  .suggestions { flex-direction: column; align-items: stretch; gap: 10px; }
+  .suggestion-card { max-width: 100%; min-width: unset; padding: 14px 12px; }
+  .suggestion-icon { font-size: 17px; margin-bottom: 6px; }
+  .suggestion-text { font-size: 13px; }
+
+  .message-row { gap: 8px; margin-bottom: 20px; }
+  .msg-content { max-width: 88%; }
+  .msg-avatar { width: 28px; height: 28px; font-size: 10px; }
+  .msg-bubble { font-size: 14px; padding: 11px 14px; line-height: 1.65; }
+  .msg-bubble h1 { font-size: 18px; }
+  .msg-bubble h2 { font-size: 15px; }
+  .msg-bubble h3 { font-size: 14px; }
+  .msg-bubble code { font-size: 12px; }
+  .msg-bubble pre { padding: 10px 12px; }
+  .msg-sender { font-size: 9px; }
+  .msg-actions { opacity: 1; }
+
+  .source-chip { max-width: 180px; font-size: 10px; }
+
+  #input-area { padding: 10px 12px 12px; }
+  .input-toolbar { gap: 6px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .input-toolbar::-webkit-scrollbar { display: none; }
+  .tool-btn { height: 32px; padding: 0 10px; font-size: 11px; flex-shrink: 0; }
+  .web-search-badge { font-size: 10px; padding: 2px 7px; flex-shrink: 0; }
+  .input-box { padding: 10px 10px 10px 12px; }
+  #message-input { font-size: 15px; min-height: 22px; }
+  #send-btn { width: 38px; height: 38px; }
+  .input-hint { display: none; }
+
+  #theme-panel, #export-panel, #model-panel, #think-panel, #sysprompt-panel, #server-panel {
+    left: 0; right: 0; bottom: 0; top: auto;
+    width: 100%; border-radius: 16px 16px 0 0;
+    border-bottom: none; max-height: 80vh;
+  }
+  .theme-grid { grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px; }
+  .export-list { padding: 10px; }
+  .export-item { padding: 12px; }
+  .model-list { padding: 8px 10px 16px; }
+
+  .skills-body { padding: 12px 12px 20px; }
+  .skill-card { padding: 11px 12px; }
+  .skill-icon { font-size: 17px; margin-bottom: 6px; }
+  .skill-name { font-size: 13px; }
+  .skill-desc { font-size: 11px; }
+
+  .main-area { padding: 16px 12px; }
+
+  #toast { bottom: 100px; font-size: 12px; }
+}
+
+@media (max-width: 380px) {
+  .masthead-title { font-size: 34px; }
+  .hdr-btn { padding: 0 6px; font-size: 10px; }
+  .msg-content { max-width: 93%; }
+  .msg-bubble { font-size: 13px; padding: 10px 12px; }
+  .skills-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .skill-card { padding: 10px; }
+  .skill-icon { font-size: 15px; margin-bottom: 4px; }
+  .skill-name { font-size: 12px; }
+  .skill-desc { font-size: 10px; }
+}
